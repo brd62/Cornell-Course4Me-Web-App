@@ -11,6 +11,9 @@ text-align:center;
 body {
 padding-top: 15%;
 padding-bottom: 15px;
+background-image: url('/static/background.jpg');
+background-position: center;
+background-size: cover;
 }
 .global-search {
 text-align:center;
@@ -26,8 +29,8 @@ margin-bottom:0;
 }
 .topcorner{
 position:absolute;
-top:2%;
-right:2%;
+top:1%;
+left:1%;
 }
 .btn{
 background-color: #4285F4;

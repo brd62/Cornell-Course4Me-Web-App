@@ -1,39 +1,43 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/main.css">
-    </head>
-    <body>
-        <div class="topcorner">
-            <p>Project Name: {{ name }}</p>
-            <p>Student Name: ({{ netid }})</p>
+
+<head>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="icon" href="/static/favicon.jpg">
+
+</head>
+
+<body>
+    <div class="topcorner">
+        <p><b>{{ name }}</b> created by: {{ netid }}</p>
+    </div>
+    <form class="form-inline global-search">
+        <h1 style="font-size: 55px; font-family:Palatino; color: #222222">
+            C<span style="display:inline-block;">
+                <img src="/static/logo.png" width="30px" height="30px"></img>
+            </span>urse4me
+        </h1>
+
+        <br>
+        <h3 style="font-size: 25px; font-family:Palatino ; color: #B31B1B">
+            Find your next favorite class
+        </h3><br><br>
+
+        <div class="form-group">
+            <input id="input" type="text" name="search" class="form-control"
+                placeholder="Input course keyword (eg: information reteival)">
         </div>
-        <form class="form-inline global-search">
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                C
-                <span style="color: #EA4335; ">S</span>
-                <span style="color: #FBBC05; ">4</span>
-                3
-                <span style="color: #34A853; ">0</span>
-                <span style="color: #EA4335; ">0</span>
-            </h1>
-            
-            <br><br>
-            
-            <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
-            </div>
-            <button type="submit" class="btn btn-info"> Go! </button>
-        </form>
-        <form class="form-inline global-search">
+        <button type=" submit" class="btn btn-info"> Search </button>
+    </form>
+    <form class="form-inline global-search">
         {% if data %}
-            <h1>{{output_message}}</h1>
-            {% for d in data %}  
-                <br>
-                <p>{{d}}</p>
-            {% endfor %}
+        <h1>{{output_message}}</h1>
+        {% for i in range(5) %}
+        <br>
+        <p>{{i + 1}}. {{data[i]}}</p>
+        {% endfor %}
         {% endif %}
-        </form>
-    </body>
+    </form>
+</body>
 
 </html>
