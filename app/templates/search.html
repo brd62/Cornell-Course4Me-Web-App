@@ -32,9 +32,13 @@
     <form class="form-inline global-search">
         {% if data %}
         <h1>{{output_message}}</h1>
-        {% for i in range(5) %}
+        {% for entry in data %}
         <br>
-        <p>{{i + 1}}. {{data[i]}}</p>
+        <p><b> {{ loop.index }}.</b></p>
+        <p><b>{{entry[0]}}</b></p>
+        <p><b>Course Description:</b> {{entry[1]}}</p>
+        <p><b>Score:</b> {{entry[2]}}</p>
+        <br>
         {% endfor %}
         {% endif %}
     </form>

@@ -14,6 +14,7 @@ padding-bottom: 15px;
 background-image: url('/static/background.jpg');
 background-position: center;
 background-size: cover;
+background-attachment: fixed;
 }
 .global-search {
 text-align:center;
