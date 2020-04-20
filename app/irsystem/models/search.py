@@ -156,7 +156,7 @@ def getResults(original_query):
     data = []
     
     for score, doc_idx in tuples[:10]:
-        data.append((np_subject[doc_idx]+""+str(np_number[doc_idx])+": "+np_title[doc_idx],np_descriptions[doc_idx], score))
+        data.append((np_subject[doc_idx]+""+str(np_number[doc_idx])+": "+np_title[doc_idx], np_descriptions[doc_idx],", ".join(eval(np_professors[doc_idx])), score))
     
     return data
 

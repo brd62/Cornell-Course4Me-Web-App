@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/main.css">
     <link rel="icon" href="/static/favicon.jpg">
-
 </head>
 
 <body>
@@ -34,10 +33,10 @@
         <h1>{{output_message}}</h1>
         {% for entry in data %}
         <br>
-        <p><b> {{ loop.index }}.</b></p>
-        <p><b>{{entry[0]}}</b></p>
-        <p><b>Course Description:</b> {{entry[1]}}</p>
-        <p><b>Score:</b> {{entry[2]}}</p>
+        <h3><b>{{ loop.index }}. {{entry[0]}}</b></h3><br>
+        <p><b>Course Description:</b> {{entry[1]}}</p><br>
+        <!-- <p><b>Instructor:</b> {{entry[2]}}</p><br> -->
+        <p><b>Score:</b> {{entry[3]}}</p>
         <br>
         {% endfor %}
         {% endif %}
