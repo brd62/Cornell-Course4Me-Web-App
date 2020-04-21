@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/main.css">
-    <link rel="icon" href="/static/favicon.jpg">
+    <!-- <link rel="icon" href="/static/favicon.jpg"> -->
 </head>
 
 <body>
@@ -29,8 +29,8 @@
         <button type=" submit" class="btn btn-info"> Search </button>
     </form>
     <form class="form-inline global-search">
-        {% if data %}
         <h1>{{output_message}}</h1>
+        {% if data %}
         {% for entry in data %}
         <br>
         <h3><b>{{ loop.index }}. {{entry[0]}}</b></h3><br>
@@ -40,6 +40,7 @@
         <br>
         {% endfor %}
         {% endif %}
+
     </form>
 </body>
 

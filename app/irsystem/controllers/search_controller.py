@@ -13,8 +13,11 @@ def search():
 		data = []
 		output_message = ''
 	else:
-		output_message = "Results for \"" + query + "\""
 		data = getResults(query)
+		if len(data) > 0 :
+			output_message = "Results for \"" + query + "\""
+		else:
+			output_message = "No results found for \"" + query + "\""
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 
