@@ -11,7 +11,7 @@ text-align:center;
 body {
 padding-top: 15%;
 padding-bottom: 15px;
-background-image: url('/static/background.jpg');
+background-image: url('/static/Background.jpg');
 background-position: center;
 background-size: cover;
 background-attachment: fixed;
