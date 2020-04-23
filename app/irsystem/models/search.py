@@ -64,7 +64,7 @@ for i in range(len(np_ids)):
 # In[8]:
 inverted_dict = {}
 regex = r'\w+' # regular expression to find words (MAY NEED TO REVISE/EDIT THIS)
-    
+
 for i in range(len(np_descriptions)):
 #for i in range(len(np_outcomes)):
     #if len(np_outcomes[i]) > 0:
@@ -83,7 +83,7 @@ for i in range(len(np_descriptions)):
             count = toks.count(t)
             inverted_dict[t] = [(id_to_index[np_ids[i]], count)]
             seen.add(t)
-    seen.clear()        
+    seen.clear()
 
 
 # In[9]:
@@ -112,7 +112,7 @@ for i in idf_dict:
         desc_idx = tup[0]
         desc_term_freq = tup[1]
         norms[desc_idx] += (desc_term_freq * idf_dict[i]) ** 2
-        
+
 norms = np.sqrt(norms)
 
 
@@ -120,57 +120,53 @@ norms = np.sqrt(norms)
 def getResults(original_query):
     query = original_query.split()
     tuples = list()
-        
+
     query_norm_sum = 0
-    
+
     for q in query:
         if q in idf_dict.keys():
             q_count = query.count(q)
             q_idf = idf_dict[q]
             query_norm_sum += (q_count*q_idf) ** 2
-                
+
     query_norm = math.sqrt(query_norm_sum)
-        
+
     doc_scores = {}
-    
+
     for q in query: #iterate over each query term
         if q in idf_dict.keys(): #if q has inverted doc frequency val
             for (doc_idx, value) in inverted_dict[q]: #iterate over each tuple in inverted_index[query_term]
                 if doc_idx not in doc_scores.keys():
-                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value #begin accumulator
+                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value * idf_dict[q]#begin accumulator
                 else:
-                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value #add to accumulator
+                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value * idf_dict[q]#add to accumulator
                 #Additional score for query term in title
                # score_boost = 0.1
                 #if q in np_title[doc_idx]:
                  #   print(q, np_title[doc_idx])
                   #  doc_scores[doc_idx] += score_boost
-        
+
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
-        
+
     for doc_idx, value in doc_scores.items():
-        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx)) 
-            
+        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
+
     tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
-    
+
     data = []
-    
+
     for score, doc_idx in tuples[:10]:
         data.append((np_subject[doc_idx]+""+str(np_number[doc_idx])+": "+np_title[doc_idx], np_descriptions[doc_idx],", ".join(eval(np_professors[doc_idx])), score))
-    
+
     return data
 
     # print("#" * len(original_query))
     # print(original_query)
     # print("#" * len(original_query))
-    # 
+    #
     # for score, doc_idx in tuples[:10]:
     #     print("\n\n")
     #     print("Score: %s \n" % (score))
     #     print("Class: %s %s %s \n" % (np_subject[doc_idx], np_number[doc_idx], np_title[doc_idx]))
     #     print("Description: %s \n" % np_descriptions[doc_idx])
     #     print("\n\n")
-
-
-
-
