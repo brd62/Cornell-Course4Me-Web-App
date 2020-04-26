@@ -8,17 +8,22 @@ net_id = "Brady Dicken (brd62), Micah Wallingford (mjw286), Sam Rosenthal (ser25
 
 @irsystem.route('/', methods=['GET'])
 def search():
-	query = request.args.get('search')
-	if not query:
+	keyword_query = request.args.get('keyword_search')
+	professor_query = request.args.get('professor_search')
+
+	if not keyword_query:
 		data = []
+		suggestions = []
 		output_message = ''
 	else:
-		data = getResults(query)
+		data = getResults(keyword_query)
+		suggestions = getSuggestions(keyword_query)
+		print(suggestions)
 		if len(data) > 0 :
-			output_message = "Results for \"" + query + "\""
+			output_message = "Results for \"" + keyword_query + "\""
 		else:
-			output_message = "No results found for \"" + query + "\""
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+			output_message = "No results found for \"" + keyword_query + "\""
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, suggestions= suggestions)
 
 
 

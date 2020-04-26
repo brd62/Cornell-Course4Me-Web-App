@@ -83,7 +83,7 @@ for i in range(len(np_descriptions)):
             count = toks.count(t)
             inverted_dict[t] = [(id_to_index[np_ids[i]], count)]
             seen.add(t)
-    seen.clear()
+    seen.clear()      
 
 
 # In[9]:
@@ -115,12 +115,11 @@ for i in idf_dict:
 
 norms = np.sqrt(norms)
 
-
 # In[13]:
-def getResults(original_query):
+def cosine_sim(original_query):
     query = original_query.split()
     tuples = list()
-
+    
     query_norm_sum = 0
 
     for q in query:
@@ -128,30 +127,84 @@ def getResults(original_query):
             q_count = query.count(q)
             q_idf = idf_dict[q]
             query_norm_sum += (q_count*q_idf) ** 2
-
+            
     query_norm = math.sqrt(query_norm_sum)
-
+    
     doc_scores = {}
 
     for q in query: #iterate over each query term
         if q in idf_dict.keys(): #if q has inverted doc frequency val
             for (doc_idx, value) in inverted_dict[q]: #iterate over each tuple in inverted_index[query_term]
                 if doc_idx not in doc_scores.keys():
-                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value * idf_dict[q]#begin accumulator
+                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value #begin accumulator
                 else:
-                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value * idf_dict[q]#add to accumulator
+                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value #add to accumulator
                 #Additional score for query term in title
                # score_boost = 0.1
                 #if q in np_title[doc_idx]:
                  #   print(q, np_title[doc_idx])
                   #  doc_scores[doc_idx] += score_boost
-
+    
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
-
+    
     for doc_idx, value in doc_scores.items():
-        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
-
+        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx)) 
+        
     tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
+    return tuples
+
+
+# In[14]:
+def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
+    
+    subject = "".join(re.split("[^a-zA-Z]*", class_tag)) 
+    number = int("".join(re.split("[^0-9]*", class_tag)))
+
+    result = classes_df[(classes_df["subject"] == subject) & (classes_df["number"] == number)]
+    
+    original_query = result['description'].item()
+    
+    print(original_query)
+    
+    query = original_query.split()
+    tuples = list()
+    
+    query_norm_sum = 0
+
+    for q in query:
+        if q in idf_dict.keys():
+            q_count = query.count(q)
+            q_idf = idf_dict[q]
+            query_norm_sum += (q_count*q_idf) ** 2
+            
+    query_norm = math.sqrt(query_norm_sum)
+    
+    doc_scores = {}
+
+    for q in query: #iterate over each query term
+        if q in idf_dict.keys(): #if q has inverted doc frequency val
+            for (doc_idx, value) in inverted_dict[q]: #iterate over each tuple in inverted_index[query_term]
+                if doc_idx not in doc_scores.keys():
+                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value #begin accumulator
+                else:
+                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value #add to accumulator
+                #Additional score for query term in title
+               # score_boost = 0.1
+                #if q in np_title[doc_idx]:
+                 #   print(q, np_title[doc_idx])
+                  #  doc_scores[doc_idx] += score_boost
+    
+        #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
+    
+    for doc_idx, value in doc_scores.items():
+        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx)) 
+        
+    tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
+    return tuples
+
+# In[15]:
+def getResults(original_query):
+    tuples = cosine_sim(original_query)
 
     data = []
 
@@ -160,13 +213,30 @@ def getResults(original_query):
 
     return data
 
-    # print("#" * len(original_query))
-    # print(original_query)
-    # print("#" * len(original_query))
-    #
-    # for score, doc_idx in tuples[:10]:
-    #     print("\n\n")
-    #     print("Score: %s \n" % (score))
-    #     print("Class: %s %s %s \n" % (np_subject[doc_idx], np_number[doc_idx], np_title[doc_idx]))
-    #     print("Description: %s \n" % np_descriptions[doc_idx])
-    #     print("\n\n")
+
+# In[16]:
+#SVD query expansion
+from sklearn.feature_extraction.text import TfidfVectorizer
+from scipy.sparse.linalg import svds
+from sklearn.preprocessing import normalize
+
+vectorizer = TfidfVectorizer(stop_words = 'english', max_df = max_df_ratio,
+                            min_df = 0)
+my_matrix = vectorizer.fit_transform([x for x in np_descriptions]).transpose()
+
+u, s, v_trans = svds(my_matrix, k=100)
+words_compressed, _, docs_compressed = svds(my_matrix, k=40)
+docs_compressed = docs_compressed.transpose()
+
+word_to_index = vectorizer.vocabulary_
+index_to_word = {i:t for t,i in word_to_index.items()}
+
+words_compressed = normalize(words_compressed, axis = 1)
+
+def getSuggestions(word_in, k=5):
+    if word_in not in word_to_index: return []
+
+    sims = words_compressed.dot(words_compressed[word_to_index[word_in],:])
+    asort = np.argsort(-sims)[:k+1]
+
+    return [index_to_word[i] for i in asort[1:]]

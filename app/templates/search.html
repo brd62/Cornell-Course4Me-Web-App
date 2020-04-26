@@ -3,6 +3,11 @@
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/main.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="/static/bootstrap.min.js"></script>
+
     <!-- <link rel="icon" href="/static/favicon.jpg"> -->
 </head>
 
@@ -10,37 +15,86 @@
     <div class="topcorner">
         <p><b>{{ name }}</b> created by: {{ netid }}</p>
     </div>
-    <form class="form-inline global-search">
-        <h1 style="font-size: 55px; font-family:Palatino; color: #222222">
-            C<span style="display:inline-block;">
-                <img src="/static/logo.png" width="30px" height="30px"></img>
-            </span>urse4me
-        </h1>
-
-        <br>
-        <h3 style="font-size: 25px; font-family:Palatino ; color: #B31B1B">
-            Find your next favorite class
-        </h3><br><br>
-
-        <div class="form-group">
-            <input id="input" type="text" name="search" class="form-control"
-                placeholder="Input course keyword (eg: information reteival)">
+    <div class="container justify-content-center">
+        <div class="col">
+            <h1 id="title">
+                C<span style="display:inline-block;">
+                    <img src="/static/logo.png" width="40px" height="40px"></img>
+                </span>urse4me
+            </h1>
         </div>
-        <button type=" submit" class="btn btn-info"> Search </button>
-    </form>
-    <form class="form-inline global-search">
-        <h1>{{output_message}}</h1>
-        {% if data %}
-        {% for entry in data %}
-        <br>
-        <h3><b>{{ loop.index }}. {{entry[0]}}</b></h3><br>
-        <p><b>Course Description:</b> {{entry[1]}}</p><br>
-        <!-- <p><b>Instructor:</b> {{entry[2]}}</p><br> -->
-        <p><b>Score:</b> {{entry[3]}}</p>
-        <br>
-        {% endfor %}
-        {% endif %}
+        <div class="col">
+            <h3 id="slogan">
+                Find your next favorite class
+            </h3>
+        </div>
+    </div>
+    </br>
 
+    <div class="container">
+        <form>
+            <div class="row">
+                <div class="col mb-2">
+                    <input id="keyword_input" type="text" name="keyword_search" class="form-control"
+                        placeholder="Course keyword (ex: information reteival)">
+                </div>
+                <div class="col mb-2">
+                    <input id="professor_input" type="text" name="professor_search" class="form-control"
+                        placeholder="Professor you enjoyed (ex: Prof DNM)">
+                </div>
+                <div class="col mb-2">
+                    <input id="class_input" type="text" name="class_search" class="form-control"
+                        placeholder="Class you enjoyed (ex: PE1300)">
+                </div>
+                <button type="submit" class="btn btn-info mb-2"> Search </button>
+            </div>
+        </form>
+    </div>
+
+    <form class="form-inline global-search">
+        <div class="container">
+            <h1 style="font-family:Palatino">{{output_message}}</h1>
+            <br>
+            {% if suggestions %}
+            <div class="row">
+                <div class="mb-2">
+                    <p>Additional search keywords: </P>
+                </div>
+                {% for word in suggestions %}
+                <div class="mb-2">
+                    <button type="button" class="btn btn-link">{{word}}</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if data %}
+            <div class="card-deck container" id="accordionExample">
+                {% for entry in data %}
+                <div class="card text-left bg-light border-dark">
+                    <div class="card-header" id="headingThree">
+                        <h2>
+                            <a class="btn btn-link" data-toggle="collapse" href="#collapseExample" role="button"
+                                aria-expanded="false" aria-controls="collapseExample">
+                                {{entry[0]}}
+                            </a>
+                        </h2>
+                    </div>
+                    <div class="collapse" id="collapseExample">
+                        <div class="card-body">
+                            {{entry[0]}}
+                        </div>
+                    </div>
+                    </br>
+                    <!-- <p style="font-family:Palatino" class="card-text">{{entry[1]}}</p> -->
+                    <!-- <h3><b>{{ loop.index }}. {{entry[0]}}</b></h3><br>
+                    <p><b>Course Description:</b> {{entry[1]}}</p><br> -->
+                    <!-- <p><b>Instructor:</b> {{entry[2]}}</p><br> -->
+                    <!-- </div> -->
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
     </form>
 </body>
 

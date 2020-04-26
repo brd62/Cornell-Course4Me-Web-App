@@ -9,17 +9,29 @@ padding: 20px 0;
 text-align:center;
 }
 body {
-padding-top: 15%;
+padding-top: 11%;
 padding-bottom: 15px;
 background-image: url('/static/Background.jpg');
 background-position: center;
 background-size: cover;
 background-attachment: fixed;
+font-family:Palatino;
 }
-.global-search {
-text-align:center;
-padding:10px;
+#title
+{
+    font-size: 65px; 
+    font-family:Palatino; 
+    text-align:center;
+    color: #222222 
 }
+#slogan
+{
+    font-size: 30px; 
+    font-family:Palatino; 
+    text-align:center;
+    color: #B31B1B
+}
+
 .global-search .form-control {
 width:500px;
 }
@@ -33,10 +45,7 @@ position:absolute;
 top:1%;
 left:1%;
 }
-.btn{
-background-color: #4285F4;
-border: none
-}
+
 .step-links a{
 color: #4285F4;
 }
