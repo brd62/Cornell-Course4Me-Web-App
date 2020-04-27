@@ -13,7 +13,7 @@
 
 <body>
     <div class="topcorner">
-        <p><b>{{ name }}</b> created by: {{ netid }}</p>
+        <p style="color: white"><b style="color: #B31B1B">{{ name }}</b> created by: {{ netid }}</p>
     </div>
     <div class="container justify-content-center">
         <div class="col">
@@ -38,31 +38,31 @@
                     <input id="keyword_input" type="text" name="keyword_search" class="form-control"
                         placeholder="Course keyword (ex: information reteival)">
                 </div>
-                <div class="col mb-2">
+                <!-- <div class="col mb-2">
                     <input id="professor_input" type="text" name="professor_search" class="form-control"
                         placeholder="Professor you enjoyed (ex: Prof DNM)">
-                </div>
+                </div> -->
                 <div class="col mb-2">
                     <input id="class_input" type="text" name="class_search" class="form-control"
                         placeholder="Class you enjoyed (ex: PE1300)">
                 </div>
-                <button type="submit" class="btn btn-info mb-2"> Search </button>
+                <button class="btn btn-info mb-2" id="searchButton"> Search </button>
             </div>
         </form>
     </div>
 
     <form class="form-inline global-search">
         <div class="container">
-            <h1 style="font-family:Palatino">{{output_message}}</h1>
+            <h1 style="color: white">{{output_message}}</h1>
             <br>
             {% if suggestions %}
             <div class="row">
                 <div class="mb-2">
-                    <p>Additional search keywords: </P>
+                    <p style="color: white">Additional search keywords: </P>
                 </div>
                 {% for word in suggestions %}
                 <div class="mb-2">
-                    <button type="button" class="btn btn-link">{{word}}</button>
+                    <button type="button" class="btn btn-link" style="color:#B31B1B">{{word}}</button>
                 </div>
                 {% endfor %}
             </div>
@@ -74,15 +74,16 @@
                 <div class="card text-left bg-light border-dark">
                     <div class="card-header" id="headingThree">
                         <h2>
-                            <a class="btn btn-link" data-toggle="collapse" href="#collapseExample" role="button"
-                                aria-expanded="false" aria-controls="collapseExample">
+                            <a class="btn btn-link" data-toggle="collapse" href="[id='{{entry[0]}}']" role="button"
+                                aria-expanded="false" aria-controls="{{entry[0]}}" style="color: #B31B1B">
                                 {{entry[0]}}
                             </a>
                         </h2>
                     </div>
-                    <div class="collapse" id="collapseExample">
+                    <div class="collapse" id="{{entry[0]}}">
                         <div class="card-body">
-                            {{entry[0]}}
+                            <p><b>Instructor:</b> {{entry[2]}}</p><br>
+                            <p><b>Class Description:</b> {{entry[1]}}</p>
                         </div>
                     </div>
                     </br>

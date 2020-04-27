@@ -8,10 +8,13 @@
 padding: 20px 0;
 text-align:center;
 }
+}
+
 body {
 padding-top: 11%;
 padding-bottom: 15px;
-background-image: url('/static/Background.jpg');
+background-image: url(https://wallpaperaccess.com/full/1390893.jpg);
+/* background-image: url('/static/Background.jpg'); */
 background-position: center;
 background-size: cover;
 background-attachment: fixed;
@@ -22,14 +25,14 @@ font-family:Palatino;
     font-size: 65px; 
     font-family:Palatino; 
     text-align:center;
-    color: #222222 
+    color: #B31B1B;
 }
 #slogan
 {
     font-size: 30px; 
     font-family:Palatino; 
     text-align:center;
-    color: #B31B1B
+    color: white;
 }
 
 .global-search .form-control {
@@ -39,13 +42,19 @@ width:500px;
 display:inline-block;
 margin-bottom:0;
 }
-}
+
 .topcorner{
 position:absolute;
 top:1%;
 left:1%;
 }
 
-.step-links a{
+/* .step-links a{
 color: #4285F4;
+} */
+
+#searchButton {
+    color: #fff;
+    background-color: #B31B1B;
+    border-color: #B31B1B;
 }

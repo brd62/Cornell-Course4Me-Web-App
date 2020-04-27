@@ -160,6 +160,7 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
     subject = "".join(re.split("[^a-zA-Z]*", class_tag)) 
     number = int("".join(re.split("[^0-9]*", class_tag)))
 
+    subject = subject.upper()
     result = classes_df[(classes_df["subject"] == subject) & (classes_df["number"] == number)]
     
     original_query = result['description'].item()
@@ -203,7 +204,7 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
     return tuples
 
 # In[15]:
-def getResults(original_query):
+def getKeywordResults(original_query):
     tuples = cosine_sim(original_query)
 
     data = []
@@ -213,8 +214,19 @@ def getResults(original_query):
 
     return data
 
-
 # In[16]:
+def getClassResults(original_query):
+    print("XXX",original_query,"XXX")
+    tuples = cosine_sim_class(original_query)
+    data = []
+
+    for score, doc_idx in tuples[:10]:
+        data.append((np_subject[doc_idx]+""+str(np_number[doc_idx])+": "+np_title[doc_idx], np_descriptions[doc_idx],", ".join(eval(np_professors[doc_idx])), score))
+
+    return data
+
+
+# In[17]:
 #SVD query expansion
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse.linalg import svds
@@ -233,10 +245,30 @@ index_to_word = {i:t for t,i in word_to_index.items()}
 
 words_compressed = normalize(words_compressed, axis = 1)
 
-def getSuggestions(word_in, k=5):
-    if word_in not in word_to_index: return []
+def getSuggestions(query, k=5):
+    query_words = query.split() 
 
-    sims = words_compressed.dot(words_compressed[word_to_index[word_in],:])
-    asort = np.argsort(-sims)[:k+1]
+    result = {}
 
-    return [index_to_word[i] for i in asort[1:]]
+    for w in query_words:
+         if w in word_to_index:
+            sims = words_compressed.dot(words_compressed[word_to_index[w],:])
+            asort = np.argsort(-sims)[:k+1]
+            for i in asort[1:]:
+                word = index_to_word[i]
+                if word not in result.keys():
+                    result[word] = sims[i]/sims[asort[0]]
+                else:
+                    result[word] = result[word] + sims[i]/sims[asort[0]]
+
+    if result == {}:
+        return []
+
+    x = sorted(result.items(),key=(lambda i: i[1]))
+    
+    suggestions = []
+    for i in range(k):
+        suggestions.append(x[-1-(1*i)][0])
+        print(x[-1-(1*i)][0], " ", x[-1-(1*i)][1])
+
+    return suggestions
