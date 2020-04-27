@@ -4,37 +4,24 @@ from tabulate import tabulate
 import re
 import numpy as np
 import math
+import pickle
 
 # Create a Pandas dataframe to act as our "table" for now
 # Import csv file of scraped data from Class Roster
 # Each row is a Cornell class
-classes_df = pd.read_csv("./roster_api_data.csv", na_filter= False)
-
-# Find all classes with Subject ENGRD and number 2110
-# subject = "ENGRD"
-# number = 2110
-# # Result is a table with one row
-# result = classes_df[(classes_df["subject"] == subject) & (classes_df["number"] == number)]
-#result = classes_df[(classes_df["id"] == 366268)]
-# Display that table
-#display(result)
-# Since result is a table with one row
-#   we need .iloc[0] to choose only that first row
-#   then we get the "professors" column and "cast" it to a list
-#   using ast.literal_eval
-# professor_list = ast.literal_eval(result.iloc[0]["professors"])
-#print(professor_list)
-
+classes_dict = pickle.load(open( "./class_roster_api_dict.pickle", "rb"))
 
 # In[3]:
 # Import csv file of scraped data from RateMyProfessor.com
-ratemyprof_df = pd.read_csv("./ratemyprofessor_api_data.csv", na_filter= False)
+# ratemyprof_df = pd.read_csv("./ratemyprofessor_api_data.csv", na_filter= False)
 # Get only the rows for professors that have reviews and tags
-reviewed_professors = ratemyprof_df[ratemyprof_df["review"] != ""]
+# reviewed_professors = ratemyprof_df[ratemyprof_df["review"] != ""]
 #display(reviewed_professors)
 
 # In[4]:
-np_dat = pd.read_csv("./roster_api_data.csv", na_filter= False).to_numpy()
+pd_data = pd.DataFrame(classes_dict).transpose()
+pd_data = pd_data[["id"]+[col for col in pd_data.columns if col != "id"]]
+np_dat = pd_data.to_numpy()
 # COLUMNS id,subject,number,title,description,outcomes,professors
 #headers = ["id", "subject", "number", "title", "description", "outcomes", "professors"]
 # tabulate data
@@ -45,13 +32,12 @@ np_dat = pd.read_csv("./roster_api_data.csv", na_filter= False).to_numpy()
 # In[5]:
 #get individual columns as np.arrays
 np_ids = np.array(np_dat[:, 0])
-np_subject = np.array(np_dat[:, 1])
-np_number = np.array(np_dat[:, 2])
-np_title = np.array(np_dat[:, 3])
-np_descriptions = np.array(np_dat[:, 4])
-np_outcomes = np.array(np_dat[:, 5])
-np_professors = np.array(np_dat[:, 6])
-# print(np_outcomes[100])
+np_professors = np.array(np_dat[:, 1])
+np_semesters = np.array(np_dat[:,3])
+np_subject_number = np.array(np_dat[:, 2])
+np_title = np.array(np_dat[:, 4])
+np_descriptions = np.array(np_dat[:, 5])
+np_outcomes = np.array(np_dat[:, 6])
 
 
 # In[7]:
@@ -157,13 +143,13 @@ def cosine_sim(original_query):
 # In[14]:
 def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
     
-    subject = "".join(re.split("[^a-zA-Z]*", class_tag)) 
-    number = int("".join(re.split("[^0-9]*", class_tag)))
+    subject = ("".join(re.split("[^a-zA-Z]*", class_tag))).upper()
+    number = str("".join(re.split("[^0-9]*", class_tag)))
 
-    subject = subject.upper()
-    result = classes_df[(classes_df["subject"] == subject) & (classes_df["number"] == number)]
+    result = [classes_dict[key] for key in classes_dict.keys() 
+                 if (subject + " " + number) in classes_dict[key]["subject-number"]][0]
     
-    original_query = result['description'].item()
+    original_query = result["description"]
     
     print(original_query)
     
@@ -210,7 +196,10 @@ def getKeywordResults(original_query):
     data = []
 
     for score, doc_idx in tuples[:10]:
-        data.append((np_subject[doc_idx]+""+str(np_number[doc_idx])+": "+np_title[doc_idx], np_descriptions[doc_idx],", ".join(eval(np_professors[doc_idx])), score))
+        data.append((" / ".join(np_subject_number[doc_idx])+
+                    ": "+np_title[doc_idx], 
+                    np_descriptions[doc_idx],
+                    ", ".join(np_professors[doc_idx]), score))
 
     return data
 
@@ -221,7 +210,10 @@ def getClassResults(original_query):
     data = []
 
     for score, doc_idx in tuples[:10]:
-        data.append((np_subject[doc_idx]+""+str(np_number[doc_idx])+": "+np_title[doc_idx], np_descriptions[doc_idx],", ".join(eval(np_professors[doc_idx])), score))
+        data.append((" / ".join(np_subject_number[doc_idx])+
+                    ": "+np_title[doc_idx], 
+                    np_descriptions[doc_idx],
+                    ", ".join(np_professors[doc_idx]), score))
 
     return data
 
