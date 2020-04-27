@@ -7,7 +7,20 @@
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
     <script src="/static/bootstrap.min.js"></script>
-
+    <script>
+    
+    $(document).ready(function(){
+      $('.combobox').combobox();
+      
+      // bonus: add a placeholder
+      $('.combobox').attr('placeholder', 'Class you enjoyed (ex: CS 4300)');
+    });
+    
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-combobox/1.1.8/css/bootstrap-combobox.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-combobox/1.1.8/js/bootstrap-combobox.min.js"></script>
     <!-- <link rel="icon" href="/static/favicon.jpg"> -->
 </head>
 
@@ -43,8 +56,13 @@
                         placeholder="Professor you enjoyed (ex: Prof DNM)">
                 </div> -->
                 <div class="col mb-2">
-                    <input id="class_input" type="text" name="class_search" class="form-control"
-                        placeholder="Class you enjoyed (ex: PE1300)">
+                  <select name="class_search" 
+                          class="combobox form-control">
+                    <option value=""></option>
+                    {% for class_name in classes_list %}
+                    <option value="{{class_name}}">{{class_name}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
                 <button class="btn btn-info mb-2" id="searchButton"> Search </button>
             </div>
