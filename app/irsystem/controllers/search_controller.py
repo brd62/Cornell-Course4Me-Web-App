@@ -1,18 +1,18 @@
-from . import *  
+from . import *
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.search import *
 import pickle
 
 project_name = "Course4me"
-net_id = "Brady Dicken (brd62), Micah Wallingford (mjw286), Sam Rosenthal (ser259), Julian Londono (jl3358)"
+net_id = "Brady Dickens (brd62), Micah Wallingford (mjw286), Sam Rosenthal (ser259), Julian Londono (jl3358)"
 
 classes_dict = pickle.load(open( "./class_roster_api_dict.pickle", "rb"))
 classes_list = set()
 for class_key in classes_dict.keys():
 	for class_name in classes_dict[class_key]["subject-number"]:
 		classes_list.add(class_name.upper())
-		
+
 
 @irsystem.route('/', methods=['GET'])
 def search():
@@ -33,7 +33,7 @@ def search():
 		suggestions = []
 		print(len(data))
 		if len(data) > 0 :
-			output_message = "Results for "+ class_query 
+			output_message = "Results for "+ class_query
 		else:
 			output_message = "No results found for \"" + keyword_query + "\""
 	else:
@@ -41,9 +41,6 @@ def search():
 		suggestions = []
 		output_message = ''
 
-	return render_template('search.html', name=project_name, netid=net_id, 
+	return render_template('search.html', name=project_name, netid=net_id,
 							output_message=output_message, data=data, suggestions= suggestions,
 							classes_list=classes_list)
-
-
-

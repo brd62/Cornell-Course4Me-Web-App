@@ -69,7 +69,7 @@ for i in range(len(np_descriptions)):
             count = toks.count(t)
             inverted_dict[t] = [(id_to_index[np_ids[i]], count)]
             seen.add(t)
-    seen.clear()      
+    seen.clear()
 
 
 # In[9]:
@@ -105,7 +105,7 @@ norms = np.sqrt(norms)
 def cosine_sim(original_query):
     query = original_query.split()
     tuples = list()
-    
+
     query_norm_sum = 0
 
     for q in query:
@@ -113,9 +113,9 @@ def cosine_sim(original_query):
             q_count = query.count(q)
             q_idf = idf_dict[q]
             query_norm_sum += (q_count*q_idf) ** 2
-            
+
     query_norm = math.sqrt(query_norm_sum)
-    
+
     doc_scores = {}
 
     for q in query: #iterate over each query term
@@ -130,32 +130,32 @@ def cosine_sim(original_query):
                 #if q in np_title[doc_idx]:
                  #   print(q, np_title[doc_idx])
                   #  doc_scores[doc_idx] += score_boost
-    
+
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
-    
+
     for doc_idx, value in doc_scores.items():
-        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx)) 
-        
+        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
+
     tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
     return tuples
 
 
 # In[14]:
 def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
-    
+
     subject = ("".join(re.split("[^a-zA-Z]*", class_tag))).upper()
     number = str("".join(re.split("[^0-9]*", class_tag)))
 
-    result = [classes_dict[key] for key in classes_dict.keys() 
+    result = [classes_dict[key] for key in classes_dict.keys()
                  if (subject + " " + number) in classes_dict[key]["subject-number"]][0]
-    
+
     original_query = result["description"]
-    
+
     print(original_query)
-    
+
     query = original_query.split()
     tuples = list()
-    
+
     query_norm_sum = 0
 
     for q in query:
@@ -163,9 +163,9 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
             q_count = query.count(q)
             q_idf = idf_dict[q]
             query_norm_sum += (q_count*q_idf) ** 2
-            
+
     query_norm = math.sqrt(query_norm_sum)
-    
+
     doc_scores = {}
 
     for q in query: #iterate over each query term
@@ -180,12 +180,12 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
                 #if q in np_title[doc_idx]:
                  #   print(q, np_title[doc_idx])
                   #  doc_scores[doc_idx] += score_boost
-    
+
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
-    
+
     for doc_idx, value in doc_scores.items():
-        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx)) 
-        
+        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
+
     tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
     return tuples
 
@@ -197,7 +197,7 @@ def getKeywordResults(original_query):
 
     for score, doc_idx in tuples[:10]:
         data.append((" / ".join(np_subject_number[doc_idx])+
-                    ": "+np_title[doc_idx], 
+                    ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
                     ", ".join(np_professors[doc_idx]), score))
 
@@ -211,15 +211,30 @@ def getClassResults(original_query):
 
     for score, doc_idx in tuples[:10]:
         data.append((" / ".join(np_subject_number[doc_idx])+
-                    ": "+np_title[doc_idx], 
+                    ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
                     ", ".join(np_professors[doc_idx]), score))
 
     return data
 
+#print professor tags
+def professor_tags(class_tag):
+    subject = ("".join(re.split("[^a-zA-Z]*", class_tag))).upper()
+    number = str("".join(re.split("[^0-9]*", class_tag)))
+    result = [classes_dict[key] for key in classes_dict.keys()
+                 if (subject + " " + number) in classes_dict[key]["subject-number"]][0]
+    professors = result['professors']
+
+    tag_dict = {}
+
+    for p in professors:
+        tag_dict[p] = ratemyprof_dict[p]['tags']
+
+    return tag_dict
+
 
 # In[17]:
-#SVD query expansion
+#SVD query expansion... modeled off Lecture Demo
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse.linalg import svds
 from sklearn.preprocessing import normalize
@@ -238,7 +253,7 @@ index_to_word = {i:t for t,i in word_to_index.items()}
 words_compressed = normalize(words_compressed, axis = 1)
 
 def getSuggestions(query, k=5):
-    query_words = query.split() 
+    query_words = query.split()
 
     result = {}
 
@@ -257,7 +272,7 @@ def getSuggestions(query, k=5):
         return []
 
     x = sorted(result.items(),key=(lambda i: i[1]))
-    
+
     suggestions = []
     for i in range(k):
         suggestions.append(x[-1-(1*i)][0])
