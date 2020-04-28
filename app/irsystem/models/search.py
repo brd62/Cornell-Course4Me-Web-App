@@ -38,6 +38,7 @@ np_subject_number = np.array(np_dat[:, 2])
 np_title = np.array(np_dat[:, 4])
 np_descriptions = np.array(np_dat[:, 5])
 np_outcomes = np.array(np_dat[:, 6])
+np_urls = np.array(np_dat[:, 7])
 
 
 # In[7]:
@@ -196,14 +197,13 @@ def getKeywordResults(original_query):
     data = []
 
     for score, doc_idx in tuples[:10]:
-        url = "https://classes.cornell.edu/browse/roster/SP19/class/AAS/1100"
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
                     ", ".join(np_professors[doc_idx]), 
                     professor_tags(np_professors[doc_idx]),
                     np_semesters[doc_idx],
-                    url))
+                    np_urls[doc_idx]))
 
     return data
 
@@ -213,14 +213,13 @@ def getClassResults(original_query):
     data = []
 
     for score, doc_idx in tuples[:10]:
-        url = "https://classes.cornell.edu/browse/roster/SP19/class/AAS/1100"
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
                     ", ".join(np_professors[doc_idx]), 
                     professor_tags(np_professors[doc_idx]),
                     np_semesters[doc_idx],
-                    url))
+                    np_urls[doc_idx]))
 
     return data
 
