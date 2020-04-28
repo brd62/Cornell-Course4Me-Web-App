@@ -8,17 +8,18 @@
         crossorigin="anonymous"></script>
     <script src="/static/bootstrap.min.js"></script>
     <script>
-    
-    $(document).ready(function(){
-      $('.combobox').combobox();
-      
-      // bonus: add a placeholder
-      $('.combobox').attr('placeholder', 'Class you enjoyed (ex: CS 4300)');
-    });
-    
+
+        $(document).ready(function () {
+            $('.combobox').combobox();
+
+            // bonus: add a placeholder
+            $('.combobox').attr('placeholder', 'Class you enjoyed (ex: CS 4300)');
+        });
+
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-combobox/1.1.8/css/bootstrap-combobox.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-combobox/1.1.8/css/bootstrap-combobox.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-combobox/1.1.8/js/bootstrap-combobox.min.js"></script>
     <!-- <link rel="icon" href="/static/favicon.jpg"> -->
@@ -56,13 +57,12 @@
                         placeholder="Professor you enjoyed (ex: Prof DNM)">
                 </div> -->
                 <div class="col mb-2">
-                  <select name="class_search" 
-                          class="combobox form-control">
-                    <option value=""></option>
-                    {% for class_name in classes_list %}
-                    <option value="{{class_name}}">{{class_name}}</option>
-                    {% endfor %}
-                  </select>
+                    <select name="class_search" class="combobox form-control">
+                        <option value=""></option>
+                        {% for class_name in classes_list %}
+                        <option value="{{class_name}}">{{class_name}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <button class="btn btn-info mb-2" id="searchButton"> Search </button>
             </div>
@@ -100,8 +100,32 @@
                     </div>
                     <div class="collapse" id="{{entry[0]}}">
                         <div class="card-body">
-                            <p><b>Instructor:</b> {{entry[2]}}</p><br>
+                            {% if entry[3] %}
+                            {% for professor in entry[3] %}
+                            <p><b>Instructor:</b> {{professor}}</p><br>
+                            {% if entry[3][professor] %}
+                            <!-- <p><b>Instructor tags:</b></p> -->
+                            {% for tag in entry[3][professor] %}
+                            <span class="badge badge-info" style="background-color:#B31B1B">{{tag}}</span>
+                            {% endfor %}
+                            <br>
+                            {% endif %}
+                            <br>
+                            {% endfor %}
+                            {%else%}
+                            <p><b>No instructor listed</b></p><br><br>
+                            {% endif %}
+                            {% if entry[4]%}
+                            <p><b>Semesters offered:</b></p>
+                            {% for sem in entry[4]%}
+                            <span class="badge badge-info" style="background-color:#B31B1B">{{sem}}</span>
+                            {% endfor %}
+                            {% endif %}
+                            <br><br>
                             <p><b>Class Description:</b> {{entry[1]}}</p>
+                            <br><br>
+                            <a target="_blank" href="{{entry[5]}}">Class roseter link</a>
+
                         </div>
                     </div>
                     </br>

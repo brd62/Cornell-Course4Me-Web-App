@@ -10,7 +10,7 @@ import pickle
 # Import csv file of scraped data from Class Roster
 # Each row is a Cornell class
 classes_dict = pickle.load(open( "./class_roster_api_dict.pickle", "rb"))
-
+ratemyprof_dict = pickle.load(open( "./ratemyprofessor_api_dict.pickle", "rb"))
 # In[3]:
 # Import csv file of scraped data from RateMyProfessor.com
 # ratemyprof_df = pd.read_csv("./ratemyprofessor_api_data.csv", na_filter= False)
@@ -196,34 +196,41 @@ def getKeywordResults(original_query):
     data = []
 
     for score, doc_idx in tuples[:10]:
+        url = "https://classes.cornell.edu/browse/roster/SP19/class/AAS/1100"
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
-                    ", ".join(np_professors[doc_idx]), score))
+                    ", ".join(np_professors[doc_idx]), 
+                    professor_tags(np_professors[doc_idx]),
+                    np_semesters[doc_idx],
+                    url))
 
     return data
 
 # In[16]:
 def getClassResults(original_query):
-    print("XXX",original_query,"XXX")
     tuples = cosine_sim_class(original_query)
     data = []
 
     for score, doc_idx in tuples[:10]:
+        url = "https://classes.cornell.edu/browse/roster/SP19/class/AAS/1100"
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
-                    ", ".join(np_professors[doc_idx]), score))
+                    ", ".join(np_professors[doc_idx]), 
+                    professor_tags(np_professors[doc_idx]),
+                    np_semesters[doc_idx],
+                    url))
 
     return data
 
 #print professor tags
-def professor_tags(class_tag):
-    subject = ("".join(re.split("[^a-zA-Z]*", class_tag))).upper()
-    number = str("".join(re.split("[^0-9]*", class_tag)))
-    result = [classes_dict[key] for key in classes_dict.keys()
-                 if (subject + " " + number) in classes_dict[key]["subject-number"]][0]
-    professors = result['professors']
+def professor_tags(professors):
+    # subject = ("".join(re.split("[^a-zA-Z]*", class_tag))).upper()
+    # number = str("".join(re.split("[^0-9]*", class_tag)))
+    # result = [classes_dict[key] for key in classes_dict.keys()
+    #              if (subject + " " + number) in classes_dict[key]["subject-number"]][0]
+    # professors = result['professors']
 
     tag_dict = {}
 
@@ -276,6 +283,5 @@ def getSuggestions(query, k=5):
     suggestions = []
     for i in range(k):
         suggestions.append(x[-1-(1*i)][0])
-        print(x[-1-(1*i)][0], " ", x[-1-(1*i)][1])
 
     return suggestions
