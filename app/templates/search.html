@@ -80,7 +80,11 @@
                 </div>
                 {% for word in suggestions %}
                 <div class="mb-2">
-                    <button type="button" class="btn btn-link" style="color:#B31B1B">{{word}}</button>
+                    <!-- <input id="suggestion_input " type="button" name="suggestion_search"
+                        class="form-control" value="{{word}}"> -->
+
+                    <button name="suggestion_search" value="{{original_query}} {{word}}" class="btn btn-link"
+                        style="color:#B31B1B">{{word}}</button>
                 </div>
                 {% endfor %}
             </div>
@@ -124,7 +128,7 @@
                             <br><br>
                             <p><b>Class Description:</b> {{entry[1]}}</p>
                             <br><br>
-                            <a target="_blank" href="{{entry[5]}}">Class roseter link</a>
+                            <a target="_blank" href="{{entry[5]}}">Class roster link</a>
 
                         </div>
                     </div>

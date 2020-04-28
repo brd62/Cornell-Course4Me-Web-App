@@ -16,12 +16,19 @@ for class_key in classes_dict.keys():
 
 @irsystem.route('/', methods=['GET'])
 def search():
+	original_query = ''
 	keyword_query = request.args.get('keyword_search')
 	# professor_query = request.args.get('professor_search')
 	class_query = request.args.get('class_search')
+	suggestion = request.args.get('suggestion_search')
+
+	if suggestion:
+		keyword_query = suggestion
+
 	if keyword_query:
 		data = getKeywordResults(keyword_query)
 		suggestions = getSuggestions(keyword_query)
+		original_query = keyword_query
 		if len(data) > 0 :
 			output_message = "Results for \"" + keyword_query + "\""
 		else:
@@ -31,6 +38,8 @@ def search():
 		print(class_query)
 		data = getClassResults(class_query)
 		suggestions = []
+		original_query = class_query
+
 		print(len(data))
 		if len(data) > 0 :
 			output_message = "Results for "+ class_query
@@ -43,4 +52,4 @@ def search():
 
 	return render_template('search.html', name=project_name, netid=net_id,
 							output_message=output_message, data=data, suggestions= suggestions,
-							classes_list=classes_list)
+							classes_list=classes_list, original_query = original_query)
