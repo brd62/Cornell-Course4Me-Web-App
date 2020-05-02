@@ -178,10 +178,11 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
 
     for doc_idx, value in doc_scores.items():
-        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
+        course = (subject + " " + number)
+        if course not in np_subject_number[doc_idx]:
+            tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
 
     tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
-    tuples = tuples[1:]
     return tuples
 
 # In[15]:
