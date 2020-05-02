@@ -277,7 +277,10 @@ def getSuggestions(query, k=5):
     x = sorted(result.items(),key=(lambda i: i[1]))
 
     suggestions = []
-    for i in range(k):
-        suggestions.append(x[-1-(1*i)][0])
+    i=0;
+    while len(suggestions) < k:
+        if(x[-1-(1*i)][0] not in query_words):
+            suggestions.append(x[-1-(1*i)][0])
+        i+=1;
 
     return suggestions
