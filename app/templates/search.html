@@ -26,8 +26,10 @@
 </head>
 
 <body>
+    <title>Course4Me</title>
     <div class="topcorner">
-        <p style="color: white"><b style="color: #B31B1B">{{ name }}</b> created by: {{ netid }}</p>
+        <p style="color: white"><a href="https://github.com/brd62/cs4300sp2020-brd62-mjw286-ser259-jl3358"
+                target="_blank"><b style="color: #B31B1B">{{ name }}</b></a> created by: {{ netid }}</p>
     </div>
     <div class="container justify-content-center">
         <div class="col">
@@ -45,17 +47,18 @@
     </div>
     </br>
 
-    <div class="container">
+
+    <div class="container ">
         <form>
             <div class="row">
                 <div class="col mb-2">
                     <input id="keyword_input" type="text" name="keyword_search" class="form-control"
-                        placeholder="Course keyword (ex: information reteival)">
+                        placeholder="Course keyword (ex: information retrieval)">
                 </div>
                 <!-- <div class="col mb-2">
-                    <input id="professor_input" type="text" name="professor_search" class="form-control"
+                        <input id="professor_input" type="text" name="professor_search" class="form-control"
                         placeholder="Professor you enjoyed (ex: Prof DNM)">
-                </div> -->
+                    </div> -->
                 <div class="col mb-2">
                     <select name="class_search" class="combobox form-control">
                         <option value=""></option>
@@ -64,7 +67,45 @@
                         {% endfor %}
                     </select>
                 </div>
+
                 <button class="btn btn-info mb-2" id="searchButton"> Search </button>
+            </div>
+            <div class="collapse" id="advanceSearch" style="margin-top:20px">
+                <div class="row">
+
+                    <div class="col mb-2">
+                        <label for="class_level_search" style="color: #B31B1B">Class level</label>
+                        <select id="class_level_input" name="class_level_search" class="form-control form-control-lg">
+                            <option value=""></option>
+                            <option value="[1,2]">1000-2000</option>
+                            <option value="[2,3]">2000-3000</option>
+                            <option value="[3,4]">3000-4000</option>
+                            <option value="[4,5,6,7,8,9]">4000+</option>
+                        </select>
+                    </div>
+                    <div class="col mb-2">
+                        <label for="semester_search" style="color: #B31B1B">Semester offered</label>
+                        <select id="semester_input" name="semester_search" class="form-control form-control-lg">
+                            <option></option>
+                            <option>Fall</option>
+                            <option>Spring</option>
+                        </select>
+                    </div>
+                    <div class="col mb-2">
+                        <label for="major_search" style="color: #B31B1B">Majors</label>
+                        <select id="major_input" name="major_search" class="form-control form-control-lg">
+                            <option value=""></option>
+                            {% for major in majors_list %}
+                            <option value="major">{{major}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row center collapse" style="justify-content: center; display: flex">
+                <a style="color: #B31B1B" id="advancedSearchButton" data-toggle="collapse" href="#advanceSearch"
+                    aria-expanded="false" aria-controls="advanceSearch" style="color: #B31B1B">
+                    Filtered Search </a>
             </div>
         </form>
     </div>
@@ -94,7 +135,7 @@
             <div class="card-deck container" id="accordionExample">
                 {% for entry in data %}
                 <div class="card text-left bg-light border-dark">
-                    <div class="card-header" id="headingThree">
+                    <div class="card-header shadow" id="headingThree">
                         <h2>
                             <a class="btn btn-link" data-toggle="collapse" href="[id='{{entry[0]}}']" role="button"
                                 aria-expanded="false" aria-controls="{{entry[0]}}" style="color: #B31B1B">
