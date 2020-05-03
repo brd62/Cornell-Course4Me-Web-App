@@ -178,6 +178,10 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
 
     for doc_idx, value in doc_scores.items():
+        for tag in np_subject_number[doc_idx]:
+            department = ("".join(re.split("[^a-zA-Z]*", tag))).upper()
+            if department == subject:
+                value += score_boost * (query_norm*norms[doc_idx])
         course = (subject + " " + number)
         if course not in np_subject_number[doc_idx]:
             tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
