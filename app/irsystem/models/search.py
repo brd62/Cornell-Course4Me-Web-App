@@ -124,10 +124,15 @@ def cosine_sim(original_query):
                     doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value * idf_dict[q] #begin accumulator
                 else:
                     doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value * idf_dict[q]  #add to accumulator
-                #Additional score for query term in title
+                # Additional score for query term in title
+                # Even more of a boost for queries that match a title verbatim
                 score_boost = 0.1
+                exact_title_boost = .5
                 if q in np_title[doc_idx].lower():
                     doc_scores[doc_idx] += score_boost * (query_norm*norms[doc_idx])
+                if(len(original_query.split()) > 1 and original_query in np_title[doc_idx].lower().replace("-", " ")):
+                    print(query, np_title[doc_idx].lower())
+                    doc_scores[doc_idx] += exact_title_boost * (query_norm*norms[doc_idx])
 
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
 
