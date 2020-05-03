@@ -58,3 +58,7 @@ color: #4285F4;
     background-color: #B31B1B;
     border-color: #B31B1B;
 }
+
+.input-group-addon{
+  display: none !important;
+}
