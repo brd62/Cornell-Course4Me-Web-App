@@ -9,9 +9,18 @@ net_id = "Brady Dickens (brd62), Micah Wallingford (mjw286), Sam Rosenthal (ser2
 
 classes_dict = pickle.load(open( "./class_roster_api_dict.pickle", "rb"))
 classes_list = set()
+majors_list = set()
 for class_key in classes_dict.keys():
 	for class_name in classes_dict[class_key]["subject-number"]:
 		classes_list.add(class_name.upper())
+
+		splitted = class_name.upper().split()
+		majors_list.add(splitted[0])
+
+classes_list = list(classes_list)
+classes_list.sort()
+majors_list = list(majors_list)
+majors_list.sort()
 
 
 @irsystem.route('/', methods=['GET'])
@@ -52,4 +61,5 @@ def search():
 
 	return render_template('search.html', name=project_name, netid=net_id,
 							output_message=output_message, data=data, suggestions= suggestions,
-							classes_list=classes_list, original_query = original_query)
+							classes_list=classes_list, majors_list=majors_list,
+							 original_query = original_query)
