@@ -88,8 +88,6 @@ for t in inverted_dict.keys():
     df = len(inverted_dict[t])
     if float(df/num_docs) < max_df_ratio:
         idf_dict[t] = math.log(num_docs/(1 + df), 2)
-    # else:
-    #     print(t)
 
 
 # In[12]:
@@ -123,14 +121,13 @@ def cosine_sim(original_query):
         if q in idf_dict.keys(): #if q has inverted doc frequency val
             for (doc_idx, value) in inverted_dict[q]: #iterate over each tuple in inverted_index[query_term]
                 if doc_idx not in doc_scores.keys():
-                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value #begin accumulator
+                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value * idf_dict[q] #begin accumulator
                 else:
-                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value #add to accumulator
+                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value * idf_dict[q]  #add to accumulator
                 #Additional score for query term in title
-               # score_boost = 0.1
-                #if q in np_title[doc_idx]:
-                 #   print(q, np_title[doc_idx])
-                  #  doc_scores[doc_idx] += score_boost
+                score_boost = 0.1
+                if q in np_title[doc_idx].lower():
+                    doc_scores[doc_idx] += score_boost * (query_norm*norms[doc_idx])
 
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
 
@@ -152,8 +149,6 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
 
     original_query = result["description"]
 
-    print(original_query)
-
     query = original_query.split()
     tuples = list()
 
@@ -173,19 +168,20 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
         if q in idf_dict.keys(): #if q has inverted doc frequency val
             for (doc_idx, value) in inverted_dict[q]: #iterate over each tuple in inverted_index[query_term]
                 if doc_idx not in doc_scores.keys():
-                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value #begin accumulator
+                    doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value * idf_dict[q] #begin accumulator
                 else:
-                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value #add to accumulator
+                    doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value * idf_dict[q] #add to accumulator
                 #Additional score for query term in title
-               # score_boost = 0.1
-                #if q in np_title[doc_idx]:
-                 #   print(q, np_title[doc_idx])
-                  #  doc_scores[doc_idx] += score_boost
+                score_boost = 0.1
+                if q in np_title[doc_idx].lower():
+                    doc_scores[doc_idx] += score_boost * (query_norm*norms[doc_idx])
 
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
 
     for doc_idx, value in doc_scores.items():
-        tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
+        course = (subject + " " + number)
+        if course not in np_subject_number[doc_idx]:
+            tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
 
     tuples = sorted(tuples, key=lambda x: x[0], reverse=True)
     return tuples
@@ -200,7 +196,7 @@ def getKeywordResults(original_query):
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
-                    ", ".join(np_professors[doc_idx]), 
+                    ", ".join(np_professors[doc_idx]),
                     professor_tags(np_professors[doc_idx]),
                     np_semesters[doc_idx],
                     np_urls[doc_idx]))
@@ -216,7 +212,7 @@ def getClassResults(original_query):
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
                     np_descriptions[doc_idx],
-                    ", ".join(np_professors[doc_idx]), 
+                    ", ".join(np_professors[doc_idx]),
                     professor_tags(np_professors[doc_idx]),
                     np_semesters[doc_idx],
                     np_urls[doc_idx]))
@@ -280,7 +276,10 @@ def getSuggestions(query, k=5):
     x = sorted(result.items(),key=(lambda i: i[1]))
 
     suggestions = []
-    for i in range(k):
-        suggestions.append(x[-1-(1*i)][0])
+    i=0;
+    while len(suggestions) < k:
+        if(x[-1-(1*i)][0] not in query_words):
+            suggestions.append(x[-1-(1*i)][0])
+        i+=1;
 
     return suggestions
