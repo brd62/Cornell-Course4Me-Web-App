@@ -49,6 +49,10 @@ top:1%;
 left:1%;
 }
 
+.course-title{
+  display: inline-flex;
+}
+
 /* .step-links a{
 color: #4285F4;
 } */

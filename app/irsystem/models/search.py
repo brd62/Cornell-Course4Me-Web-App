@@ -185,14 +185,23 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
                     doc_scores[doc_idx] = query.count(q) * idf_dict[q] * value * idf_dict[q] #begin accumulator
                 else:
                     doc_scores[doc_idx] += query.count(q) * idf_dict[q] * value * idf_dict[q] #add to accumulator
-                #Additional score for query term in title
+                # Additional score for query term in title
+                # Even more of a boost for queries that match a title verbatim
                 score_boost = 0.1
+                exact_title_boost = .5
                 if q in np_title[doc_idx].lower():
                     doc_scores[doc_idx] += score_boost * (query_norm*norms[doc_idx])
+                if(len(original_query.split()) > 1 and original_query in np_title[doc_idx].lower().replace("-", " ")):
+                    print(query, np_title[doc_idx].lower())
+                    doc_scores[doc_idx] += exact_title_boost * (query_norm*norms[doc_idx])
 
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS
 
     for doc_idx, value in doc_scores.items():
+        for tag in np_subject_number[doc_idx]:
+            department = ("".join(re.split("[^a-zA-Z]*", tag))).upper()
+            if department == subject:
+                value += score_boost * (query_norm*norms[doc_idx])
         course = (subject + " " + number)
         if course not in np_subject_number[doc_idx]:
             tuples.append((value/(query_norm*norms[doc_idx]), doc_idx))
@@ -201,20 +210,61 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
     return tuples
 
 # In[15]:
-def getKeywordResults(original_query):
+def getKeywordResults(original_query, classLevel_query, semester_query, major_query, k=10):
     tuples = cosine_sim(original_query)
 
     data = []
+    i = 1
 
-    for score, doc_idx in tuples[:10]:
-        data.append((" / ".join(np_subject_number[doc_idx])+
-                    ": "+np_title[doc_idx],
-                    np_descriptions[doc_idx],
-                    ", ".join(np_professors[doc_idx]),
-                    professor_tags(np_professors[doc_idx]),
-                    np_semesters[doc_idx],
-                    np_urls[doc_idx],
-                    doc_idx))
+    while i < len(tuples) -1 and len(data) < k:
+        score, doc_idx = tuples[i] 
+        semesters = set()
+        semSatisfied = False
+        classLevelSatisfied = False
+        majorSatisfied = False
+
+        for sem in np_semesters[doc_idx]:
+            if(sem[:2] == 'SP'):
+                semesters.add("Spring")
+            else:
+                semesters.add("Fall")
+
+        if semester_query == ""  or semester_query == None:
+            semSatisfied = True
+        elif semester_query in semesters:
+            semSatisfied = True
+
+        majors = set()
+        classLevels = set()
+        for subject in np_subject_number[doc_idx]:
+            subjectSplit = subject.split() 
+            majors.add(subjectSplit[0])
+            classLevels.add(subjectSplit[1])
+        
+        if classLevel_query == "" or classLevel_query == None:
+            classLevelSatisfied = True
+        else:
+            for classLevel in classLevels:
+                if int(classLevel) > int(classLevel_query[0:4]) and int(classLevel) <= int(classLevel_query[5:10]):
+                    classLevelSatisfied = True
+
+        
+        if major_query == "" or major_query == None:
+            majorSatisfied = True
+        elif major_query in majors:
+            majorSatisfied = True
+
+        if majorSatisfied and classLevelSatisfied and semSatisfied:
+            data.append((" / ".join(np_subject_number[doc_idx])+
+                        ": "+np_title[doc_idx],
+                        np_descriptions[doc_idx],
+                        ", ".join(np_professors[doc_idx]),
+                        professor_tags(np_professors[doc_idx]),
+                        np_semesters[doc_idx],
+                        np_urls[doc_idx],
+                        doc_idx))
+
+        i+=1
 
     return data
 
@@ -222,7 +272,6 @@ def getKeywordResults(original_query):
 def getClassResults(original_query):
     tuples = cosine_sim_class(original_query)
     data = []
-
     for score, doc_idx in tuples[:10]:
         data.append((" / ".join(np_subject_number[doc_idx])+
                     ": "+np_title[doc_idx],
@@ -291,11 +340,11 @@ def getSuggestions(query, k=5):
     x = sorted(result.items(),key=(lambda i: i[1]))
 
     suggestions = []
-    i=0;
+    i=0
     while len(suggestions) < k:
         if(x[-1-(1*i)][0] not in query_words):
             suggestions.append(x[-1-(1*i)][0])
-        i+=1;
+        i+=1
 
     return suggestions
     
