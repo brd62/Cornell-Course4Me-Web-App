@@ -48,8 +48,8 @@
     </br>
 
 
-    <div class="container ">
-        <form>
+    <form>
+        <div class="container">
             <div class="row">
                 <div class="col mb-2">
                     <input id="keyword_input" type="text" name="keyword_search" class="form-control"
@@ -77,18 +77,18 @@
                         <label for="class_level_search" style="color: #B31B1B">Class level</label>
                         <select id="class_level_input" name="class_level_search" class="form-control form-control-lg">
                             <option value=""></option>
-                            <option value="[1,2]">1000-2000</option>
-                            <option value="[2,3]">2000-3000</option>
-                            <option value="[3,4]">3000-4000</option>
-                            <option value="[4,5,6,7,8,9]">4000+</option>
+                            <option value="1000,2999">1000-2000</option>
+                            <option value="2000,3999">2000-3000</option>
+                            <option value="3000,4999">3000-4000</option>
+                            <option value="4000,9999">4000+</option>
                         </select>
                     </div>
                     <div class="col mb-2">
                         <label for="semester_search" style="color: #B31B1B">Semester offered</label>
                         <select id="semester_input" name="semester_search" class="form-control form-control-lg">
-                            <option></option>
-                            <option>Fall</option>
-                            <option>Spring</option>
+                            <option value=""></option>
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
                         </select>
                     </div>
                     <div class="col mb-2">
@@ -96,7 +96,7 @@
                         <select id="major_input" name="major_search" class="form-control form-control-lg">
                             <option value=""></option>
                             {% for major in majors_list %}
-                            <option value="major">{{major}}</option>
+                            <option value="{{major}}">{{major}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -107,82 +107,82 @@
                     aria-expanded="false" aria-controls="advanceSearch" style="color: #B31B1B">
                     Filtered Search </a>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <form class="form-inline global-search">
-        <div class="container">
-            <h1 style="color: white">{{output_message}}</h1>
-            <br>
-            {% if suggestions %}
+        <!-- <form class="form-inline global-search"> -->
+        <div class="container ">
             <div class="row">
-                <div class="mb-2">
-                    <p style="color: white">Additional search keywords: </P>
+                <div class="col text-center">
+                    <h1 style="color: white">{{output_message}}</span></h1>
+                    <br>
                 </div>
-                {% for word in suggestions %}
-                <div class="mb-2">
-                    <!-- <input id="suggestion_input " type="button" name="suggestion_search"
-                        class="form-control" value="{{word}}"> -->
-
-                    <button name="suggestion_search" value="{{original_query}} {{word}}" class="btn btn-link"
-                        style="color:#B31B1B">{{word}}</button>
+            </div>
+            {% if suggestions %}
+            <div class="row text-center">
+                <div class="col text-center">
+                    <p style="color: white">Additional search keywords:
+                        {% for word in suggestions %}
+                        <button name="suggestion_search"
+                            value="{{ogKeyword_query}} {{word}}^{{ogClassLevel_query}}^{{ogSemester_query}}^{{ogMajor_query}}"
+                            class=" btn btn-link" style="color:#B31B1B">{{word}}</button>
+                        {% endfor %}
+                    </P>
                 </div>
-                {% endfor %}
             </div>
             {% endif %}
 
             {% if data %}
-            <div class="card-deck container" id="accordionExample">
-                {% for entry in data %}
-                <div class="card text-left bg-light border-dark">
-                    <div class="card-header shadow" id="headingThree">
-                        <h2>
-                            <a class="btn btn-link" data-toggle="collapse" href="[id='{{entry[0]}}']" role="button"
-                                aria-expanded="false" aria-controls="{{entry[0]}}" style="color: #B31B1B">
-                                {{entry[0]}}
-                            </a>
-                        </h2>
-                    </div>
-                    <div class="collapse" id="{{entry[0]}}">
-                        <div class="card-body">
-                            {% if entry[3] %}
-                            {% for professor in entry[3] %}
-                            <p><b>Instructor:</b> {{professor}}</p><br>
-                            {% if entry[3][professor] %}
-                            <!-- <p><b>Instructor tags:</b></p> -->
-                            {% for tag in entry[3][professor] %}
-                            <span class="badge badge-info" style="background-color:#B31B1B">{{tag}}</span>
-                            {% endfor %}
-                            <br>
-                            {% endif %}
-                            <br>
-                            {% endfor %}
-                            {%else%}
-                            <p><b>No instructor listed</b></p><br><br>
-                            {% endif %}
-                            {% if entry[4]%}
-                            <p><b>Semesters offered:</b></p>
-                            {% for sem in entry[4]%}
-                            <span class="badge badge-info" style="background-color:#B31B1B">{{sem}}</span>
-                            {% endfor %}
-                            {% endif %}
-                            <br><br>
-                            <p><b>Class Description:</b> {{entry[1]}}</p>
-                            <br><br>
-                            <a target="_blank" href="{{entry[5]}}">Class roster link</a>
+            <div class="card-deck" id="accordionExample">
+                <div class="container">
+                    {% for entry in data %}
+                    <div class="row">
+                        <div class="card text-left bg-light border-dark" style="margin:5px">
+                            <div class="card-header shadow" id="headingThree">
+                                <h2>
+                                    <a class="btn btn-link" data-toggle="collapse" href="[id='{{entry[0]}}']"
+                                        role="button" aria-expanded="false" aria-controls="{{entry[0]}}"
+                                        style="color: #B31B1B">
+                                        {{entry[0]}}
+                                    </a>
+                                </h2>
+                            </div>
+                            <div class="collapse" id="{{entry[0]}}">
+                                <div class="card-body">
+                                    {% if entry[3] %}
+                                    {% for professor in entry[3] %}
+                                    <p><b>Instructor:</b> {{professor}}</p><br>
+                                    {% if entry[3][professor] %}
+                                    {% for tag in entry[3][professor] %}
+                                    <span class="badge badge-info" style="background-color:#B31B1B">{{tag}}</span>
+                                    {% endfor %}
+                                    <br>
+                                    {% endif %}
+                                    <br>
+                                    {% endfor %}
+                                    {%else%}
+                                    <p><b>No instructor listed</b></p><br><br>
+                                    {% endif %}
+                                    {% if entry[4]%}
+                                    <p><b>Semesters offered:</b></p>
+                                    {% for sem in entry[4]%}
+                                    <span class="badge badge-info" style="background-color:#B31B1B">{{sem}}</span>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <br><br>
+                                    <p><b>Class Description:</b> {{entry[1]}}</p>
+                                    <br><br>
+                                    <a target="_blank" href="{{entry[5]}}">Class roster link</a>
 
+                                </div>
+                            </div>
+                            <!-- </br> -->
                         </div>
                     </div>
-                    </br>
-                    <!-- <p style="font-family:Palatino" class="card-text">{{entry[1]}}</p> -->
-                    <!-- <h3><b>{{ loop.index }}. {{entry[0]}}</b></h3><br>
-                    <p><b>Course Description:</b> {{entry[1]}}</p><br> -->
-                    <!-- <p><b>Instructor:</b> {{entry[2]}}</p><br> -->
-                    <!-- </div> -->
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                {% endif %}
             </div>
+            {% endif %}
+        </div>
     </form>
 </body>
 
