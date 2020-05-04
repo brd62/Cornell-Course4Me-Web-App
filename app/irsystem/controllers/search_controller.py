@@ -48,7 +48,7 @@ def search():
 	if(suggestion):
 		keyword_query = suggestion
 
-	if keyword_query:
+	if keyword_query and not rocchio_update_query:
 		data = getKeywordResults(keyword_query, classLevel_query, semester_query, major_query)
 		suggestions = getSuggestions(keyword_query)
 		original_query = keyword_query
@@ -65,7 +65,7 @@ def search():
 			output_message += '\n' + "Classes in the " + major_query+" major"
 
 		
-	elif class_query:
+	elif class_query and not rocchio_update_query:
 		data = getClassResults(class_query)
 		suggestions = []
 		original_query = class_query
@@ -75,14 +75,19 @@ def search():
 		else:
 			output_message = "No results found for \"" + keyword_query + "\""
 	elif rocchio_update_query:
+		
 		new_query = rocchio(rocchio_update_query, relevant_ids, irrelevant_ids)
+		
+		print(new_query)
 		
 		data = getKeywordResults(new_query, classLevel_query=None, semester_query=None, major_query=None)
 		suggestions = getSuggestions(new_query)
 		if len(data) == 0 :
 			output_message = "No results found for \"" + keyword_query + "\"" + " after Rocchio Update"
+			original_query = keyword_query
 		else:
 			output_message = "Updated Rocchio Results for \"" + new_query + "\""
+			original_query = new_query
 	
 	
 	else:
