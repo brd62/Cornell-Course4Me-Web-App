@@ -44,17 +44,9 @@ def search():
 	classLevel_query = request.args.get('class_level_search')
 	semester_query = request.args.get('semester_search')
 	major_query = request.args.get('major_search')
-	if suggestion:
-		suggestion = suggestion.split("^")
-		print(suggestion)
-		keyword_query = suggestion[0]
-		classLevel_query = suggestion[1]
-		semester_query = suggestion[2]
-		major_query = suggestion[3]
-		
-	print(request.args)
 
-
+	if(suggestion):
+		keyword_query = suggestion
 
 	if keyword_query:
 		data = getKeywordResults(keyword_query, classLevel_query, semester_query, major_query)

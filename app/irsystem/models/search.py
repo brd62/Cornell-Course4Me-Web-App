@@ -214,9 +214,9 @@ def getKeywordResults(original_query, classLevel_query, semester_query, major_qu
     tuples = cosine_sim(original_query)
 
     data = []
-    i = 1
+    i = 0
 
-    while i < len(tuples) -1 and len(data) < k:
+    while i < len(tuples) and len(data) < k:
         score, doc_idx = tuples[i] 
         semesters = set()
         semSatisfied = False

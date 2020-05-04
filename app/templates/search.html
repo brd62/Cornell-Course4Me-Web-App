@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col mb-2">
                     <input id="keyword_input" type="text" name="keyword_search" class="form-control"
-                        placeholder="Course keyword (ex: information retrieval)">
+                        placeholder="Course keyword (ex: information retrieval)" value="{{ogKeyword_query}}">
                 </div>
                 <!-- <div class="col mb-2">
                         <input id="professor_input" type="text" name="professor_search" class="form-control"
@@ -77,26 +77,26 @@
                         <label for="class_level_search" style="color: #B31B1B">Class level</label>
                         <select id="class_level_input" name="class_level_search" class="form-control form-control-lg">
                             <option value=""></option>
-                            <option value="1000,2999">1000-2000</option>
-                            <option value="2000,3999">2000-3000</option>
-                            <option value="3000,4999">3000-4000</option>
-                            <option value="4000,9999">4000+</option>
+                            <option {% if ogClassLevel_query == "1000,2999" %} selected {% endif %} value="1000,2999">1000-2000</option>
+                            <option {% if ogClassLevel_query == "2000,3999" %} selected {% endif %} value="2000,3999">2000-3000</option>
+                            <option {% if ogClassLevel_query == "3000,4999" %} selected {% endif %} value="3000,4999">3000-4000</option>
+                            <option {% if ogClassLevel_query == "4000,9999" %} selected {% endif %} value="4000,9999">4000+</option>
                         </select>
                     </div>
                     <div class="col mb-2">
                         <label for="semester_search" style="color: #B31B1B">Semester offered</label>
                         <select id="semester_input" name="semester_search" class="form-control form-control-lg">
                             <option value=""></option>
-                            <option value="Fall">Fall</option>
-                            <option value="Spring">Spring</option>
+                            <option {% if ogSemester_query == "Fall" %} selected {% endif %} value="Fall">Fall</option>
+                            <option {% if ogSemester_query == "Spring" %} selected {% endif %} value="Spring">Spring</option>
                         </select>
                     </div>
                     <div class="col mb-2">
                         <label for="major_search" style="color: #B31B1B">Majors</label>
-                        <select id="major_input" name="major_search" class="form-control form-control-lg">
+                        <select id="major_input" name="major_search" class="form-control form-control-lg" >
                             <option value=""></option>
                             {% for major in majors_list %}
-                            <option value="{{major}}">{{major}}</option>
+                            <option {% if ogMajor_query == major %} selected {% endif %} value="{{major}}">{{major}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -123,7 +123,7 @@
                     <p style="color: white">Additional search keywords:
                         {% for word in suggestions %}
                         <button name="suggestion_search"
-                            value="{{ogKeyword_query}} {{word}}^{{ogClassLevel_query}}^{{ogSemester_query}}^{{ogMajor_query}}"
+                            value="{{ogKeyword_query}} {{word}}"
                             class=" btn btn-link" style="color:#B31B1B">{{word}}</button>
                         {% endfor %}
                     </P>
