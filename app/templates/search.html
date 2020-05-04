@@ -134,6 +134,7 @@
             {% if data %}
             <div class="card-deck" id="accordionExample">
                 <div class="container">
+                  <button class="btn btn-info mb-2 d-flex mx-auto" name="rocchio_update_query" value="{{ogKeyword_query}}"> Update results with Relevant/Irrelevant classes </button>
                     {% for entry in data %}
                     <div class="row">
                         <div class="card text-left bg-light border-dark" style="margin:5px">
@@ -187,11 +188,10 @@
                         </div>
                     </div>
                     {% endfor %}
-                    <button class="btn btn-info mb-2 d-flex mx-auto" name="rocchio_update_query" value="{{ogKeyword_query}}"> Update Rocchio </button>
                 </div>
-                
+
             </div>
-            
+
             {% endif %}
         </div>
     </form>

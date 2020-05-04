@@ -53,11 +53,6 @@ inverted_dict = {}
 regex = r'\w+' # regular expression to find words (MAY NEED TO REVISE/EDIT THIS)
 
 for i in range(len(np_descriptions)):
-#for i in range(len(np_outcomes)):
-    #if len(np_outcomes[i]) > 0:
-     #   match = ''.join(np_outcomes[i])
-    #else:
-   #     match = np_descriptions[i]
     toks = re.findall(regex, np_descriptions[i].lower())
     seen = set()
     for t in toks:
@@ -217,7 +212,7 @@ def getKeywordResults(original_query, classLevel_query, semester_query, major_qu
     i = 0
 
     while i < len(tuples) and len(data) < k:
-        score, doc_idx = tuples[i] 
+        score, doc_idx = tuples[i]
         semesters = set()
         semSatisfied = False
         classLevelSatisfied = False
@@ -237,10 +232,10 @@ def getKeywordResults(original_query, classLevel_query, semester_query, major_qu
         majors = set()
         classLevels = set()
         for subject in np_subject_number[doc_idx]:
-            subjectSplit = subject.split() 
+            subjectSplit = subject.split()
             majors.add(subjectSplit[0])
             classLevels.add(subjectSplit[1])
-        
+
         if classLevel_query == "" or classLevel_query == None:
             classLevelSatisfied = True
         else:
@@ -248,7 +243,7 @@ def getKeywordResults(original_query, classLevel_query, semester_query, major_qu
                 if int(classLevel) > int(classLevel_query[0:4]) and int(classLevel) <= int(classLevel_query[5:10]):
                     classLevelSatisfied = True
 
-        
+
         if major_query == "" or major_query == None:
             majorSatisfied = True
         elif major_query in majors:
@@ -285,11 +280,6 @@ def getClassResults(original_query):
 
 #print professor tags
 def professor_tags(professors):
-    # subject = ("".join(re.split("[^a-zA-Z]*", class_tag))).upper()
-    # number = str("".join(re.split("[^0-9]*", class_tag)))
-    # result = [classes_dict[key] for key in classes_dict.keys()
-    #              if (subject + " " + number) in classes_dict[key]["subject-number"]][0]
-    # professors = result['professors']
 
     tag_dict = {}
 
@@ -347,56 +337,56 @@ def getSuggestions(query, k=5):
         i+=1
 
     return suggestions
-    
-# One-time Rocchio 
+
+# One-time Rocchio
 
 def rocchio(query, relevant_ids, irrelevant_ids, td_matrix=term_doc_matrix):
     alpha = 1
     beta = 1
     gamma = 1
-    
+
     num_toks = np.shape(td_matrix)
-    
+
     q_vec = np.zeros(num_toks[1])
-    
+
     q_terms = query.split(' ')
-    
+
     for t in q_terms:
         if (t in tokens):
             i = tokens.index(t)
             q_vec[i] = q_vec[i] + 1
-        
+
     term1 = q_vec * alpha
-    
+
     rel_sum = np.zeros(num_toks[1])
     irrel_sum = np.zeros(num_toks[1])
-    
+
     for doc_id in relevant_ids:
         rel_sum = rel_sum + td_matrix[doc_id, ]
 
     for doc_id in irrelevant_ids:
         irrel_sum = irrel_sum + td_matrix[doc_id, ]
-        
+
     if(len(relevant_ids) == 0):
         term2 = (rel_sum*beta)
     else:
         term2 = (rel_sum*beta)/len(relevant_ids)
-    
+
     if(len(irrelevant_ids) == 0):
         term3 = (irrel_sum*gamma)
     else:
         term3 = (irrel_sum*gamma)/len(irrelevant_ids)
-        
+
     new_vec = term1 + term2 - term3
 
     for i in range(len(new_vec)):
         if new_vec[i] < 0:
             new_vec[i] = 0
-            
-    new_query = ""        
-    
+
+    new_query = ""
+
     for i in range(len(new_vec)):
         word = tokens[i] + " "
         new_query = new_query + (word * int(round(new_vec[i])))
-        
+
     return new_query
