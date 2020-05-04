@@ -81,14 +81,23 @@ for i in range(len(np_descriptions)):
 min_df = 0
 max_df_ratio = 0.17 #tuned this down until it printed out only very common words for a course description
 num_docs = np.shape(np_dat)[0]
-
+tokens = set()
 idf_dict = {}
 
 for t in inverted_dict.keys():
     df = len(inverted_dict[t])
     if float(df/num_docs) < max_df_ratio:
+        tokens.add(t)
         idf_dict[t] = math.log(num_docs/(1 + df), 2)
 
+tokens = sorted(tokens)
+
+term_doc_matrix = np.zeros((len(np_descriptions), len(tokens)))
+
+for t in tokens:
+    term_idx = tokens.index(t)
+    for doc_idx, freq in inverted_dict[t]:
+        term_doc_matrix[doc_idx, term_idx] = freq
 
 # In[12]:
 norms = np.zeros(num_docs)
@@ -204,7 +213,8 @@ def getKeywordResults(original_query):
                     ", ".join(np_professors[doc_idx]),
                     professor_tags(np_professors[doc_idx]),
                     np_semesters[doc_idx],
-                    np_urls[doc_idx]))
+                    np_urls[doc_idx],
+                    doc_idx))
 
     return data
 
@@ -288,3 +298,56 @@ def getSuggestions(query, k=5):
         i+=1;
 
     return suggestions
+    
+# One-time Rocchio 
+
+def rocchio(query, relevant_ids, irrelevant_ids, td_matrix=term_doc_matrix):
+    alpha = 1
+    beta = 1
+    gamma = 1
+    
+    num_toks = np.shape(td_matrix)
+    
+    q_vec = np.zeros(num_toks[1])
+    
+    q_terms = query.split(' ')
+    
+    for t in q_terms:
+        if (t in tokens):
+            i = tokens.index(t)
+            q_vec[i] = q_vec[i] + 1
+        
+    term1 = q_vec * alpha
+    
+    rel_sum = np.zeros(num_toks[1])
+    irrel_sum = np.zeros(num_toks[1])
+    
+    for doc_id in relevant_ids:
+        rel_sum = rel_sum + td_matrix[doc_id, ]
+
+    for doc_id in irrelevant_ids:
+        irrel_sum = irrel_sum + td_matrix[doc_id, ]
+        
+    if(len(relevant_ids) == 0):
+        term2 = (rel_sum*beta)
+    else:
+        term2 = (rel_sum*beta)/len(relevant_ids)
+    
+    if(len(irrelevant_ids) == 0):
+        term3 = (irrel_sum*gamma)
+    else:
+        term3 = (irrel_sum*gamma)/len(irrelevant_ids)
+        
+    new_vec = term1 + term2 - term3
+
+    for i in range(len(new_vec)):
+        if new_vec[i] < 0:
+            new_vec[i] = 0
+            
+    new_query = ""        
+    
+    for i in range(len(new_vec)):
+        word = tokens[i] + " "
+        new_query = new_query + (word * int(round(new_vec[i])))
+        
+    return new_query

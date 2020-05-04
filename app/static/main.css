@@ -62,3 +62,43 @@ color: #4285F4;
 .input-group-addon{
   display: none !important;
 }
+
+.checkbox-label {
+    display: inline-block !important;
+    position: relative;
+    margin: auto;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 24px;
+    width: 125px;
+    clear: both;
+    float: right;
+}
+
+.checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkbox-label .checkbox-custom {
+    background-color: transparent;
+    border-radius: 5px;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    border: 1px solid #000000;
+    padding: 3px;
+}
+
+.checkbox-label.relevant input:checked ~ .checkbox-custom {
+    background-color: #2aff2a;
+    opacity:1;
+}
+
+.checkbox-label.irrelevant input:checked ~ .checkbox-custom {
+    background-color: #ff5151;
+    opacity:1;
+}

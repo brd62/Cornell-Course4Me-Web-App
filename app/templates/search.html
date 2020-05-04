@@ -111,27 +111,28 @@
     </div>
 
     <form class="form-inline global-search">
-        <div class="container">
-            <h1 style="color: white">{{output_message}}</h1>
-            <br>
-            {% if suggestions %}
-            <div class="row">
-                <div class="mb-2">
-                    <p style="color: white">Additional search keywords: </P>
-                </div>
-                {% for word in suggestions %}
-                <div class="mb-2">
-                    <!-- <input id="suggestion_input " type="button" name="suggestion_search"
-                        class="form-control" value="{{word}}"> -->
+      <div class="container">
+          <h1 style="color: white">{{output_message}}</h1>
+          <br>
+          {% if suggestions %}
+          <div class="row">
+              <div class="mb-2">
+                  <p style="color: white">Additional search keywords: </P>
+              </div>
+              {% for word in suggestions %}
+              <div class="mb-2">
+                  <!-- <input id="suggestion_input " type="button" name="suggestion_search"
+                      class="form-control" value="{{word}}"> -->
 
-                    <button name="suggestion_search" value="{{original_query}} {{word}}" class="btn btn-link"
-                        style="color:#B31B1B">{{word}}</button>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+                  <button name="suggestion_search" value="{{original_query}} {{word}}" class="btn btn-link"
+                      style="color:#B31B1B">{{word}}</button>
+              </div>
+              {% endfor %}
+          </div>
+          {% endif %}
 
-            {% if data %}
+          {% if data %}
+          <form>
             <div class="card-deck container" id="accordionExample">
                 {% for entry in data %}
                 <div class="card text-left bg-light border-dark">
@@ -142,6 +143,14 @@
                                 {{entry[0]}}
                             </a>
                         </h2>
+                        <label class="checkbox-label relevant">
+                          <input name="radiobox-{{entry[6]}}" value="relevant-{{entry[6]}}" type="radio">
+                          <span class="checkbox-custom">✓ Relevant</span>
+                        </label>
+                        <label class="checkbox-label irrelevant">
+                          <input name="radiobox-{{entry[6]}}" value="irrelevant-{{entry[6]}}" type="radio">
+                          <span class="checkbox-custom">X Irrelevant</span>
+                        </label>
                     </div>
                     <div class="collapse" id="{{entry[0]}}">
                         <div class="card-body">
@@ -170,7 +179,6 @@
                             <p><b>Class Description:</b> {{entry[1]}}</p>
                             <br><br>
                             <a target="_blank" href="{{entry[5]}}">Class roster link</a>
-
                         </div>
                     </div>
                     </br>
@@ -181,8 +189,11 @@
                     <!-- </div> -->
                 </div>
                 {% endfor %}
+                <button class="btn btn-info mb-2" name="rocchio_update_query" value="{{original_query}}"> Update Rocchio </button>
                 {% endif %}
             </div>
+          </form>
+        </div>
     </form>
 </body>
 

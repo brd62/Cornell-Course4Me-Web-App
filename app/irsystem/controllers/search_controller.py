@@ -25,11 +25,24 @@ majors_list.sort()
 
 @irsystem.route('/', methods=['GET'])
 def search():
+	
+	relevant_ids = [int(request.args[key].split("-")[1])
+						for key in request.args.keys() if "radiobox" in key and 
+						request.args[key].split("-")[0] == "relevant"]
+						
+	irrelevant_ids = [int(request.args[key].split("-")[1]) 
+						for key in request.args.keys() if "radiobox" in key and 
+						request.args[key].split("-")[0] == "irrelevant"]
+						
+	print(relevant_ids)
+	print(irrelevant_ids)
+	
 	original_query = ''
 	keyword_query = request.args.get('keyword_search')
 	# professor_query = request.args.get('professor_search')
 	class_query = request.args.get('class_search')
 	suggestion = request.args.get('suggestion_search')
+	rocchio_update_query = request.args.get('rocchio_update_query')
 
 	if suggestion:
 		keyword_query = suggestion
@@ -54,6 +67,18 @@ def search():
 			output_message = "Results for "+ class_query
 		else:
 			output_message = "No results found for \"" + keyword_query + "\""
+	elif rocchio_update_query:
+		
+		
+		new_query = rocchio(rocchio_update_query, relevant_ids, irrelevant_ids)
+		data = getKeywordResults(new_query)
+		suggestions = getSuggestions(new_query)
+		if len(data) == 0 :
+			output_message = "No results found for \"" + keyword_query + "\"" + " after Rocchio Update"
+		else:
+			output_message = "Updated Rocchio Results for \"" + new_query + "\""
+	
+	
 	else:
 		data = []
 		suggestions = []
