@@ -80,7 +80,7 @@ def search():
 		else:
 			data = getClassResults(class_query)
 			suggestions = []
-			original_query = class_query
+			class_query
 
 			if len(data) > 0 :
 				output_message = ""
@@ -114,5 +114,5 @@ def search():
 	return render_template('search.html', name=project_name, netid=net_id,
 							output_message=output_message, data=data, suggestions= suggestions,
 							classes_list=classes_list, majors_list=majors_list,
-							ogKeyword_query = original_query, ogClassLevel_query = classLevel_query,
-							ogSemester_query = semester_query,ogMajor_query = major_query )
+							ogKeyword_query = original_query, ogClass_query = class_query, ogClassLevel_query = classLevel_query,
+							ogSemester_query = semester_query,ogMajor_query = major_query)

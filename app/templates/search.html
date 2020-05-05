@@ -69,10 +69,10 @@
                 </div>
 
                 <div class="col mb-2">
-                    <select name="class_search" class="combobox form-control">
+                    <select name="class_search" class="combobox form-control" value="{{ogClass_query}}">
                         <option value=""></option>
                         {% for class_name in classes_list %}
-                        <option value="{{class_name}}">{{class_name}}</option>
+                        <option {% if ogClass_query == class_name %} selected {% endif %} value="{{class_name}}">{{class_name}}</option>
                         {% endfor %}
                     </select>
                 </div>
