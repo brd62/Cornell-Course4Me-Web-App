@@ -86,7 +86,7 @@ def search():
 			output_message = "No results found for \"" + keyword_query + "\"" + " after relevant classes update"
 			original_query = keyword_query
 		else:
-			output_message = "Updated relevant classes results for \"" + new_query + "\""
+			output_message = "Updated relevant classes results"
 			original_query = new_query
 
 
