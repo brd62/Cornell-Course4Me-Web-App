@@ -79,7 +79,6 @@ def search():
 			suggestions = []
 			output_message = 'Cannot input keyword when class search is selected'
 		else:
-			print(class_query)
 			data = getClassResults(class_query, classLevel_query, semester_query, major_query)
 			suggestions = []
 			class_query
