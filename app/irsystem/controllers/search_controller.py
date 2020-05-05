@@ -116,4 +116,4 @@ def search():
 							output_message=output_message, data=data, suggestions= suggestions,
 							classes_list=classes_list, majors_list=majors_list,
 							ogKeyword_query = original_query, ogClass_query = class_query, ogClassLevel_query = classLevel_query,
-							ogSemester_query = semester_query,ogMajor_query = major_query)
+							ogSemester_query = semester_query,ogMajor_query = major_query, ogToggle_query = toggle_query)

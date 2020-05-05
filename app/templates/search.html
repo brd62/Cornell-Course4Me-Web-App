@@ -36,11 +36,11 @@
         <p style="color: white"><a href="https://github.com/brd62/cs4300sp2020-brd62-mjw286-ser259-jl3358"
                 target="_blank"><b style="color: #B31B1B">{{ name }}</b></a> created by: {{ netid }}
         </p>
-        <p><a href="https://course-4-me-v1.herokuapp.com/"
-                target="_blank"><b style="color: #B31B1B">{{ name }}: Prototype 1</a>
+        <p><a href="https://course-4-me-v1.herokuapp.com/" target="_blank"><b style="color: #B31B1B">{{ name }}:
+                    Prototype 1</a>
         </p>
-        <p><a href="https://course-4-me-v2.herokuapp.com/"
-                target="_blank"><b style="color: #B31B1B">{{ name }}: Prototype 2</a>
+        <p><a href="https://course-4-me-v2.herokuapp.com/" target="_blank"><b style="color: #B31B1B">{{ name }}:
+                    Prototype 2</a>
         </p>
     </div>
     <div class="container justify-content-center">
@@ -73,16 +73,19 @@
                     </div> -->
                 <div class="col mb-2">
                     <div class="text-center" style="width:100%; height:100%">
-                        <input id="toggle" name="toggle_search" type="checkbox" data-toggle="toggle" onclick="myFunct()"
+                        <input id="toggle" name="toggle_search" type="checkbox" data-toggle="toggle"
+                            {% if ogToggle_query %} checked {% else %} {% endif%} onclick="myFunct()"
                             data-off="Keyword Search" data-on="Class search" data-onstyle="secondary"
                             data-offstyle="danger" data-width="50%" onchange="myFunct()">
                     </div>
                 </div>
                 <div class="col mb-2 xx">
-                    <select id="class_input" name="class_search" class="combobox form-control" value="{{ogClass_query}}" disabled>
+                    <select id="class_input" name="class_search" class="combobox form-control" value="{{ogClass_query}}"
+                        disabled>
                         <option value=""></option>
                         {% for class_name in classes_list %}
-                        <option {% if ogClass_query == class_name %} selected {% endif %} value="{{class_name}}">{{class_name}}</option>
+                        <option {% if ogClass_query == class_name %} selected {% endif %} value="{{class_name}}">
+                            {{class_name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -103,7 +106,8 @@
                 </script>
 
             </div>
-            <div class="{% if not (ogClassLevel_query or ogSemester_query or ogMajor_query) %} collapse {% endif %}" id="advanceSearch" style="margin-top:20px">
+            <div class="{% if not (ogClassLevel_query or ogSemester_query or ogMajor_query) %} collapse {% endif %}"
+                id="advanceSearch" style="margin-top:20px">
                 <div class="row">
 
                     <div class="col mb-2">
