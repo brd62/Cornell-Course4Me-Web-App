@@ -57,7 +57,7 @@ left:1%;
 color: #4285F4;
 } */
 
-#searchButton {
+#searchButton, #rocchio, #resetButton {
     color: #fff;
     background-color: #B31B1B;
     border-color: #B31B1B;
@@ -105,4 +105,8 @@ color: #4285F4;
 .checkbox-label.irrelevant input:checked ~ .checkbox-custom {
     background-color: #ff5151;
     opacity:1;
+}
+
+div.toggle.btn.btn-danger{
+    width:50%;
 }
