@@ -73,7 +73,7 @@ def search():
 			# 	output_message += '\n' + "Classes in the " + major_query+" major"
 
 		
-	elif class_query and not rocchio_update_query and toggle_query=="on": 
+	elif class_query and not (rocchio_update_query or relevant_ids or irrelevant_ids) and toggle_query=="on": 
 		if keyword_query: 
 			data = []
 			suggestions = []
