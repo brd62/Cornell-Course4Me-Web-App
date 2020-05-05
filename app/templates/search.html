@@ -85,7 +85,7 @@
                 </div>
 
             </div>
-            <div class="collapse" id="advanceSearch" style="margin-top:20px">
+            <div class="{% if not (ogClassLevel_query or ogSemester_query or ogMajor_query) %} collapse {% endif %}" id="advanceSearch" style="margin-top:20px">
                 <div class="row">
 
                     <div class="col mb-2">
