@@ -45,10 +45,11 @@ def search():
 	semester_query = request.args.get('semester_search')
 	major_query = request.args.get('major_search')
 
+	print(request.args)
+
 	if(suggestion):
 		keyword_query = suggestion
 
-	print(toggle_query)
 	if keyword_query and not rocchio_update_query and toggle_query==None:
 		if class_query: 
 			data = []
@@ -87,7 +88,7 @@ def search():
 			else:
 				output_message = "No results found"
 		
-	elif rocchio_update_query:
+	elif(rocchio_update_query or relevant_ids or irrelevant_ids):
 		new_query = rocchio(rocchio_update_query, relevant_ids, irrelevant_ids)
 
 		print(new_query)
