@@ -274,7 +274,8 @@ def getClassResults(original_query):
                     ", ".join(np_professors[doc_idx]),
                     professor_tags(np_professors[doc_idx]),
                     np_semesters[doc_idx],
-                    np_urls[doc_idx]))
+                    np_urls[doc_idx],
+                    doc_idx))
 
     return data
 

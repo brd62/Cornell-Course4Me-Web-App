@@ -25,15 +25,15 @@ majors_list.sort()
 
 @irsystem.route('/', methods=['GET'])
 def search():
-	
+
 	relevant_ids = [int(request.args[key].split("-")[1])
-						for key in request.args.keys() if "radiobox" in key and 
+						for key in request.args.keys() if "radiobox" in key and
 						request.args[key].split("-")[0] == "relevant"]
-						
-	irrelevant_ids = [int(request.args[key].split("-")[1]) 
-						for key in request.args.keys() if "radiobox" in key and 
+
+	irrelevant_ids = [int(request.args[key].split("-")[1])
+						for key in request.args.keys() if "radiobox" in key and
 						request.args[key].split("-")[0] == "irrelevant"]
-					
+
 	original_query = ''
 	toggle_query = request.args.get('toggle_search')
 	keyword_query = request.args.get('keyword_search')
@@ -89,9 +89,9 @@ def search():
 		
 	elif rocchio_update_query:
 		new_query = rocchio(rocchio_update_query, relevant_ids, irrelevant_ids)
-		
+
 		print(new_query)
-		
+
 		data = getKeywordResults(new_query, classLevel_query=None, semester_query=None, major_query=None)
 		suggestions = getSuggestions(new_query)
 		if len(data) == 0 :
@@ -100,8 +100,8 @@ def search():
 		else:
 			output_message = "Updated Rocchio Results:"
 			original_query = new_query
-	
-	
+
+
 	else:
 		data = []
 		suggestions = []
