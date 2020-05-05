@@ -79,7 +79,7 @@ def search():
 			suggestions = []
 			output_message = 'Cannot input keyword when class search is selected'
 		else:
-			data = getClassResults(class_query)
+			data = getClassResults(class_query, classLevel_query, semester_query, major_query)
 			suggestions = []
 			class_query
 
@@ -93,7 +93,7 @@ def search():
 
 		print(new_query)
 
-		data = getKeywordResults(new_query, classLevel_query=None, semester_query=None, major_query=None)
+		data = getKeywordResults(new_query, classLevel_query, semester_query, major_query)
 		suggestions = getSuggestions(new_query)
 		if len(data) == 0 :
 			output_message = "No results found after Rocchio Update"
