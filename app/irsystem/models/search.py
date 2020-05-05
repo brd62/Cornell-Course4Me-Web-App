@@ -186,7 +186,7 @@ def cosine_sim_class(class_tag): #input is of the form 'INFO 4300' or 'INFO4300'
                 subject_boost = .3
                 if q in np_title[doc_idx].lower():
                     doc_scores[doc_idx] += score_boost * (query_norm*norms[doc_idx])
-                if(subject.lower() in np_title[doc_idx].lower().replace("-", " ")):
+                if(subject.lower() in [class_entry.lower().split()[0] for class_entry in np_subject_number[doc_idx]]):
                     doc_scores[doc_idx] += subject_boost * (query_norm*norms[doc_idx])
 
         #GET FROM DICT TO LIST OF TUPLES WHILE DIVIDING BY NORMS

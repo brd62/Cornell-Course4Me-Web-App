@@ -73,12 +73,13 @@ def search():
 			# 	output_message += '\n' + "Classes in the " + major_query+" major"
 
 		
-	elif class_query and not rocchio_update_query and toggle_query=="on":
+	elif class_query and not rocchio_update_query and toggle_query=="on": 
 		if keyword_query: 
 			data = []
 			suggestions = []
 			output_message = 'Cannot input keyword when class search is selected'
 		else:
+			print(class_query)
 			data = getClassResults(class_query, classLevel_query, semester_query, major_query)
 			suggestions = []
 			class_query
