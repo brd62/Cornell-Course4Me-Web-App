@@ -25,15 +25,15 @@ majors_list.sort()
 
 @irsystem.route('/', methods=['GET'])
 def search():
-	
+
 	relevant_ids = [int(request.args[key].split("-")[1])
-						for key in request.args.keys() if "radiobox" in key and 
+						for key in request.args.keys() if "radiobox" in key and
 						request.args[key].split("-")[0] == "relevant"]
-						
-	irrelevant_ids = [int(request.args[key].split("-")[1]) 
-						for key in request.args.keys() if "radiobox" in key and 
+
+	irrelevant_ids = [int(request.args[key].split("-")[1])
+						for key in request.args.keys() if "radiobox" in key and
 						request.args[key].split("-")[0] == "irrelevant"]
-					
+
 	original_query = ''
 	keyword_query = request.args.get('keyword_search')
 	# professor_query = request.args.get('professor_search')
@@ -53,7 +53,7 @@ def search():
 		suggestions = getSuggestions(keyword_query)
 		original_query = keyword_query
 		if len(data) > 0 :
-			output_message = "Results for \"" + keyword_query + "\"" 
+			output_message = "Results for \"" + keyword_query + "\""
 		else:
 			output_message = "No results found for \"" + keyword_query + "\""
 
@@ -64,7 +64,7 @@ def search():
 		if major_query != None and major_query !="":
 			output_message += '\n' + "Classes in the " + major_query+" major"
 
-		
+
 	elif class_query and not rocchio_update_query:
 		data = getClassResults(class_query)
 		suggestions = []
@@ -75,21 +75,21 @@ def search():
 		else:
 			output_message = "No results found for \"" + keyword_query + "\""
 	elif rocchio_update_query:
-		
+
 		new_query = rocchio(rocchio_update_query, relevant_ids, irrelevant_ids)
-		
+
 		print(new_query)
-		
+
 		data = getKeywordResults(new_query, classLevel_query=None, semester_query=None, major_query=None)
 		suggestions = getSuggestions(new_query)
 		if len(data) == 0 :
-			output_message = "No results found for \"" + keyword_query + "\"" + " after Rocchio Update"
+			output_message = "No results found for \"" + keyword_query + "\"" + " after relevant classes update"
 			original_query = keyword_query
 		else:
-			output_message = "Updated Rocchio Results for \"" + new_query + "\""
+			output_message = "Updated relevant classes results for \"" + new_query + "\""
 			original_query = new_query
-	
-	
+
+
 	else:
 		data = []
 		suggestions = []
