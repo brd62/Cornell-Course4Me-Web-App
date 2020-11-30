@@ -1,3 +1,6 @@
+Below is the project template and setup guide. To use the web app, view the deployment link to the Heroku app.
+https://course-4-me.herokuapp.com/
+________________________________________________________________________________________________________________________________________________________________________________
 # CS4300 - Flask Template
 This Flask app template is intended to get you started with your project and launch it on Heroku, and assumes no prior experience with web development (but some patience).
 
